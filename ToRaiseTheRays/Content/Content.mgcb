@@ -13,10 +13,3 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Papyrus.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Papyrus.spritefont
-
