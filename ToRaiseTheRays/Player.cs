@@ -7,6 +7,7 @@ using System;
 namespace ToRaiseTheRays;
 
 public class Player : GameObject {
+    public int Health { get => health; }
     private int health;
     private int invulLength;
     
@@ -45,34 +46,34 @@ public class Player : GameObject {
         this.directionSprites = sprites;
     }
 
-    public void Shoot(List<Bullet> bullets, Texture2D bulletTexture) {
+    public void Shoot() {
         if (currentReloadTime <= 0 && Keyboard.GetState().IsKeyDown(Keys.Space)) {
-            Rectangle bulletPos = new Rectangle(position.X + position.Width/2 - 10, position.Y, 20, 20);
-            bullets.Add(new Bullet(bulletTexture, bulletPos, new Vector2(0, -10), 10, Alignment.FRIENDLY));
+            base.Shoot(new Vector2(0, -1), 10, 10, 20);
             currentReloadTime = reloadTime;
         }
     }
 
     public void TakeDamage(int damage) {
-        if (invulLength <= 0) {
-            health -= damage;
-            invulLength = 60;
-        }
+        health -= damage;
+        invulLength = 60;
     }
 
     public override void Move() {
         KeyboardState state = Keyboard.GetState();
 
+        // Update acceleration
         acceleration = Vector2.Zero;
         if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) acceleration.X -= accelModifier;
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) acceleration.X += accelModifier;
         if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up)) acceleration.Y -= accelModifier;
         if (state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.Down)) acceleration.Y += accelModifier;
 
+        // Update velocity
         velocity += acceleration;
         if (velocity != Vector2.Zero) velocity -= Vector2.Normalize(velocity) * friction;
         if (velocity.Length() > velocityCap) velocity = Vector2.Normalize(velocity) * velocityCap;
 
+        // Update position
         position.X += (int)velocity.X;
         position.Y += (int)velocity.Y;
         
@@ -114,26 +115,21 @@ public class Player : GameObject {
     }
 
     public override void CheckCollision(GameObject other) {
-        if (position.Intersects(other.position) && other.alignment != Alignment.FRIENDLY) {
+        if (position.Intersects(other.position) && other.Alignment != Alignment.FRIENDLY && invulLength <= 0) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
-            else TakeDamage(10); // Default damage for non-bullet collisions
+            else if (other is Enemy enemy) TakeDamage(enemy.CollisionDamage);
         }
     }
 
-    public override void Draw(SpriteBatch spriteBatch) {
-        base.Draw(spriteBatch);
-        
-        // Debug text position
+    public override void Draw() {
+        base.Draw();
+
         Vector2 debugTextPosition = new Vector2(position.X, position.Y - 40);
         
-        // Create debug strings
         string velocityText = $"Velocity: {velocity.X:F2}, {velocity.Y:F2}";
         string accelerationText = $"Acceleration: {acceleration.X:F2}, {acceleration.Y:F2}";
         
-        SpriteFont font = Game1.PapyrusFont;
-        
-        // Draw debug text
-        spriteBatch.DrawString(font, velocityText, debugTextPosition, Color.White);
-        spriteBatch.DrawString(font, accelerationText, debugTextPosition + new Vector2(0, 20), Color.White);
+        Game1.SpriteBatch.DrawString(Game1.PapyrusFont, velocityText, debugTextPosition, Color.White);
+        Game1.SpriteBatch.DrawString(Game1.PapyrusFont, accelerationText, debugTextPosition + new Vector2(0, 20), Color.White);
     }
 }

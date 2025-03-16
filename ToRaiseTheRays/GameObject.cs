@@ -1,27 +1,43 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ToRaiseTheRays {
-    public abstract class GameObject {
-        protected Texture2D texture;
-        public Rectangle position;
-        protected Vector2 velocity;
-        public Alignment alignment { get; protected set; }
+namespace ToRaiseTheRays;
 
-        public GameObject(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment) {
-            this.texture = texture;
-            this.position = position;
-            this.velocity = velocity;
-            this.alignment = alignment;
-        }
+public enum Alignment {FRIENDLY, NEUTRAL, ENEMY}
 
-        public virtual void Draw(SpriteBatch spriteBatch) => spriteBatch.Draw(texture, position, Color.White);
+public abstract class GameObject {
+    protected Texture2D texture;
+    public Rectangle position;
+    protected Vector2 velocity;
+    public Alignment Alignment { get; protected set; }
 
-        public virtual void Move() {
-            position.X += (int)velocity.X;
-            position.Y += (int)velocity.Y;
-        }
-
-        public abstract void CheckCollision(GameObject other);
+    public GameObject(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment) {
+        this.texture = texture;
+        this.position = position;
+        this.velocity = velocity;
+        Alignment = alignment;
     }
+
+    public virtual void Move() {
+        position.X += (int)velocity.X;
+        position.Y += (int)velocity.Y;
+    }
+
+    public abstract void CheckCollision(GameObject other);
+
+    public virtual void Shoot(Vector2 direction, float speed, int damage, int size) {
+        Rectangle bulletPos = new Rectangle(
+            position.X + position.Width/2 - size/2,
+            position.Y + position.Height/2 - size/2,
+            size, size
+        );
+        Game1.ActiveEntities.Add(new Bullet(Game1.BulletTexture, bulletPos, direction * speed, damage, this, Alignment));
+    }
+
+    public virtual void Update() {
+        Move();
+        foreach (GameObject other in Game1.ActiveEntities) CheckCollision(other);
+    }
+
+    public virtual void Draw() => Game1.SpriteBatch.Draw(texture, position, Color.White);
 }
