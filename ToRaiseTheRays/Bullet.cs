@@ -21,6 +21,7 @@ public class Bullet : GameObject {
     }
 
     public override void CheckCollision(GameObject other) {
-        if (position.Intersects(other.position) && other.Alignment != this.Alignment) Alive = false;
+        if (other.Alignment == Alignment || other is Bullet) return;
+        if (position.Intersects(other.position)) Alive = false;
     }
 }

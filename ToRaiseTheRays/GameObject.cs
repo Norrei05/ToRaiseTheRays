@@ -34,10 +34,5 @@ public abstract class GameObject {
         Game1.ActiveEntities.Add(new Bullet(Game1.BulletTexture, bulletPos, direction * speed, damage, this, Alignment));
     }
 
-    public virtual void Update() {
-        Move();
-        foreach (GameObject other in Game1.ActiveEntities) CheckCollision(other);
-    }
-
     public virtual void Draw() => Game1.SpriteBatch.Draw(texture, position, Color.White);
 }

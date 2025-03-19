@@ -66,7 +66,12 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
         player.Shoot();
-        foreach (GameObject entity in ActiveEntities) entity.Update();
+
+        foreach (GameObject entity in ActiveEntities) entity.Move();
+        foreach (GameObject entity in ActiveEntities)
+        {
+            foreach (GameObject other in ActiveEntities) entity.CheckCollision(other);
+        }
 
         // Remove dead entities
         for (int i = ActiveEntities.Count - 1; i >= 0; i--)

@@ -28,17 +28,17 @@ public class Player : GameObject {
 
     public Player(Dictionary<string, Texture2D> sprites, Rectangle position, Texture2D fogTexture)
         : base(sprites["Barque_N"], position, Vector2.Zero, Alignment.FRIENDLY) {
-        this.health = 100;
-        this.invulLength = 60; // 1 second at 60fps
+        health = 100;
+        invulLength = 60; // 1 second at 60fps
         
-        this.acceleration = Vector2.Zero;
-        this.accelModifier = 0.4f;
+        acceleration = Vector2.Zero;
+        accelModifier = 0.4f;
         
-        this.velocityCap = 8.0f;
-        this.friction = 0.1f;
+        velocityCap = 8.0f;
+        friction = 0.1f;
         
-        this.reloadTime = 0.2f;
-        this.currentReloadTime = 0;
+        reloadTime = 0.2f;
+        currentReloadTime = 0;
         
         // this.fogTexture = fogTexture;
         // this.fogPosition = new Rectangle(0, 0, Game1.ScreenBounds.Width, Game1.ScreenBounds.Height);
@@ -115,7 +115,8 @@ public class Player : GameObject {
     }
 
     public override void CheckCollision(GameObject other) {
-        if (position.Intersects(other.position) && other.Alignment != Alignment.FRIENDLY && invulLength <= 0) {
+        if (other.Alignment == Alignment || invulLength > 0) return;
+        if (position.Intersects(other.position)) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
             else if (other is Enemy enemy) TakeDamage(enemy.CollisionDamage);
         }
