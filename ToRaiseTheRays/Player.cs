@@ -43,7 +43,7 @@ public class Player : GameObject {
         // this.fogTexture = fogTexture;
         // this.fogPosition = new Rectangle(0, 0, Game1.ScreenBounds.Width, Game1.ScreenBounds.Height);
         
-        this.directionSprites = sprites;
+        directionSprites = sprites;
     }
 
     public void Shoot() {
@@ -120,17 +120,5 @@ public class Player : GameObject {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
             else if (other is Enemy enemy) TakeDamage(enemy.CollisionDamage);
         }
-    }
-
-    public override void Draw() {
-        base.Draw();
-
-        Vector2 debugTextPosition = new Vector2(position.X, position.Y - 40);
-        
-        string velocityText = $"Velocity: {velocity.X:F2}, {velocity.Y:F2}";
-        string accelerationText = $"Acceleration: {acceleration.X:F2}, {acceleration.Y:F2}";
-        
-        Game1.SpriteBatch.DrawString(Game1.PapyrusFont, velocityText, debugTextPosition, Color.White);
-        Game1.SpriteBatch.DrawString(Game1.PapyrusFont, accelerationText, debugTextPosition + new Vector2(0, 20), Color.White);
     }
 }

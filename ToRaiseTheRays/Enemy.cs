@@ -58,7 +58,5 @@ public abstract class Enemy : GameObject {
         }
     }
 
-    public virtual void TakeDamage(int damage) {
-        Health -= damage;
-    }
+    public virtual void TakeDamage(int damage) => Health -= damage;
 }
