@@ -67,9 +67,13 @@ public class Game1 : Game
 
         player.Shoot();
 
+        // Do all movement before checking collision.
         foreach (GameObject entity in ActiveEntities) entity.Move();
+
         foreach (GameObject entity in ActiveEntities)
         {
+            // Collision checking is one-sided per GameObject, so this doesn't double-check.
+            // Self-checking is fine, since the alignment of an object will always match itself.
             foreach (GameObject other in ActiveEntities) entity.CheckCollision(other);
         }
 
