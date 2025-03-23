@@ -8,6 +8,8 @@ namespace ToRaiseTheRays
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont font;
+        private string gameState;
 
         public Game1()
         {
@@ -26,16 +28,16 @@ namespace ToRaiseTheRays
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            font=Content.Load<SpriteFont>("Papyrus");
+            // Starting gamestate is the title screen
+            gameState = "title";
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
+            setState(gameState);
 
             base.Update(gameTime);
         }
@@ -43,10 +45,42 @@ namespace ToRaiseTheRays
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            _spriteBatch.Begin();
+            if (gameState == "title")
+            {
+                _spriteBatch.DrawString(font, "TO RAISE THE RAYS", new Vector2(180, 190), Color.OrangeRed);
+                _spriteBatch.DrawString(font, "PRESS ENTER TO BEGIN", new Vector2(160, 230), Color.OrangeRed);
+            }
+            _spriteBatch.End();
             base.Draw(gameTime);
+        }
+        private void setState(string state)
+        {
+            switch (state)
+            {
+                case "title":
+                    //displays title, start message(PRESS START TO BEGIN)
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                    {
+                        gameState = "day";
+                    }
+                    break;
+                case "score":
+                    //displays scores
+                    break;
+                case "day":
+                    //Remove enemies and fog, begin restoration
+                    break;
+                case "night":
+                    //begin spawning enemies, create fog
+                    break;
+                case "game over":
+                    //halts movement, display game over message
+                    break;
+                default:
+                    //Should not be triggered, put error code here
+                    break;
+            }
         }
     }
 }
