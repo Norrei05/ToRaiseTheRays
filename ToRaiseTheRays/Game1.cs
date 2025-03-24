@@ -78,8 +78,8 @@ public class Game1 : Game
         // fogTexture = Content.Load<Texture2D>("Fog_Of_War");
 
         // Load in tilesets and generate a map of source rectangles based on placement of tiles in tileset images
-        dayTileset = Content.Load<Texture2D>("Tiles_Day_1");
-        nightTileset = Content.Load<Texture2D>("Tiles_Night_1");
+        dayTileset = Content.Load<Texture2D>("Title_Day");
+        nightTileset = Content.Load<Texture2D>("Title_Night");
         CreateMap();
 
         // Create player of size 44x44 at the bottom of the screen
@@ -88,7 +88,7 @@ public class Game1 : Game
         ActiveEntities.Add(player);
 
         List<string> files = new List<string>();
-        files.Add("WaveTest.Wave");
+        files.Add("WaveTest.wave");
         
         generator = new EnemyGenerator(files, 3, enemyTexture, playerPos);
     }
@@ -102,7 +102,18 @@ public class Game1 : Game
         generator.Update(gameTime);
 
         // Do all movement before checking collision.
-        foreach (GameObject entity in ActiveEntities) entity.Move();
+        foreach (GameObject entity in ActiveEntities)
+        {
+            if (entity is Enemy)
+            {
+                Enemy enemy = (Enemy)entity;
+                enemy.Move(gameTime);
+            }
+            else
+            {
+                entity.Move();
+            }
+        }
 
         foreach (GameObject entity in ActiveEntities)
         {

@@ -54,12 +54,12 @@ namespace ToRaiseTheRays
                         int posX = int.Parse(pos.Substring(0, pos.IndexOf(",")));
                         int posY = int.Parse(pos.Substring(pos.IndexOf(",") + 1));
 
-                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, enemyRectangle, new Vector2(2, 0), Alignment.ENEMY, new Vector2(posX, posY), 3, filename));
+                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, enemyRectangle, new Vector2(2, 0), Alignment.ENEMY, new Vector2(posX, posY), 5, filename));
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error: " + e.Message);
+                      Console.WriteLine("Error: " + e.Message);
                 }
                 finally
                 {

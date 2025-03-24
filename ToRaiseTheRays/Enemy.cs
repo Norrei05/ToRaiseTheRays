@@ -56,9 +56,9 @@ public class Enemy : GameObject {
         this.filename = filename;
     }
 
-    public void Move() {
+    public void Move(GameTime gameTime) {
         if (Spawning) {
-            timer += 1 / 60; // Assuming 60 FPS
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
             float t = (float)(timer / spawnDuration);
             
             position.X = (int)MathHelper.Lerp(position.X, (int)spawnTarget.X, t);
@@ -77,7 +77,7 @@ public class Enemy : GameObject {
 
             float timeReq = distance / speed;
 
-            timer += 1 / 60;
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
 
             float t = (float)(timer / timeReq);
 
@@ -99,7 +99,6 @@ public class Enemy : GameObject {
             }
         }
 
-        if (!Game1.ScreenBounds.Intersects(position)) Health = 0;
     }
 
     public override void CheckCollision(GameObject other) {
@@ -118,7 +117,7 @@ public class Enemy : GameObject {
 
         try
         {
-            input = new StreamReader(filename);
+            input = new StreamReader(filename + ".pattern");
 
             int numMoves = int.Parse(input.ReadLine());
 
