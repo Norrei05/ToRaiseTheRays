@@ -64,7 +64,12 @@ public class Game1 : Game
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
         {
-            playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSprites/Barque_{direction}");
+            if (direction == "U")
+                playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"Barque_{direction}_Night"); 
+            else if (direction == "N")
+                playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"Barque_U_Night");
+            else
+                playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSprites/Barque_{direction}");
         }
 
         // Load in fog of war asset
@@ -76,7 +81,7 @@ public class Game1 : Game
         CreateMap();
 
         // Create player of size 44x44 at the bottom of the screen
-        Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 44, 44);
+        Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 100, 100);
         player = new Player(playerSprites, playerPos, null); // Passing null instead of fogTexture
         ActiveEntities.Add(player);
     }
@@ -120,7 +125,7 @@ public class Game1 : Game
         for (int col = 0; col < map.GetLength(0); col++)
         {
             for (int row = 0; row < map.GetLength(1); row++)
-                SpriteBatch.Draw(nightTileset, new Vector2(col * 16, row * 16), map[col, row], Color.White);
+                SpriteBatch.Draw(nightTileset, new Vector2(col * 16, row * 16), map[col, row], Color.LightSlateGray);
         }
 
         foreach (GameObject entity in ActiveEntities) entity.Draw();
