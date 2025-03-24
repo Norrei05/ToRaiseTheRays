@@ -12,5 +12,11 @@ namespace ExternalTool
             EnemyPattern instance = new EnemyPattern();
             instance.ShowDialog();
         }
+
+        private void buttonWave_Click(object sender, EventArgs e)
+        {
+            WaveFormation instance = new WaveFormation();
+            instance.ShowDialog();
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace ExternalTool
 {
-    partial class EnemyPattern
+    partial class WaveFormation
     {
         /// <summary>
         /// Required designer variable.
@@ -29,43 +29,54 @@
         private void InitializeComponent()
         {
             groupBoxGrid = new GroupBox();
+            textBoxType = new TextBox();
             buttonSave = new Button();
             SuspendLayout();
             // 
             // groupBoxGrid
             // 
-            groupBoxGrid.Location = new Point(347, 24);
+            groupBoxGrid.Location = new Point(380, 27);
             groupBoxGrid.Name = "groupBoxGrid";
-            groupBoxGrid.Size = new Size(419, 414);
+            groupBoxGrid.Size = new Size(386, 411);
             groupBoxGrid.TabIndex = 0;
             groupBoxGrid.TabStop = false;
             groupBoxGrid.Text = "Grid";
             // 
+            // textBoxType
+            // 
+            textBoxType.Location = new Point(45, 75);
+            textBoxType.Name = "textBoxType";
+            textBoxType.Size = new Size(244, 23);
+            textBoxType.TabIndex = 1;
+            // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(12, 24);
+            buttonSave.Location = new Point(12, 139);
             buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(316, 414);
-            buttonSave.TabIndex = 1;
+            buttonSave.Size = new Size(352, 299);
+            buttonSave.TabIndex = 2;
             buttonSave.Text = "Save";
             buttonSave.UseVisualStyleBackColor = true;
             buttonSave.Click += buttonSave_Click;
             // 
-            // EnemyPattern
+            // WaveFormation
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(buttonSave);
+            Controls.Add(textBoxType);
             Controls.Add(groupBoxGrid);
-            Name = "EnemyPattern";
-            Text = "EnemyPattern";
+            Name = "WaveFormation";
+            Text = "WaveFormation";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private GroupBox groupBoxGrid;
+        private TextBox textBoxType;
         private Button buttonSave;
     }
 }

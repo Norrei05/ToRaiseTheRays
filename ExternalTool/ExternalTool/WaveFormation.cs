@@ -4,31 +4,30 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Numerics;
 
 namespace ExternalTool
 {
-    public partial class EnemyPattern : Form
+    public partial class WaveFormation : Form
     {
         private PictureBox[,] grid;
+        private Color currentColor;
 
-        private List<Point> gridTiles;
-        private List<Vector2> movements;
+        private List<string> types;
+        private List<Vector2> positions;
 
-        public EnemyPattern()
+        public WaveFormation()
         {
             InitializeComponent();
 
-            gridTiles = new List<Point>();
-            gridTiles.Add(new Point(20, 20));
+            types = new List<string>();
+            positions = new List<Vector2>();
 
-            movements = new List<Vector2>();
-
-            int tileWidth = 41;
-            int tileHeight = 41;
+            int tileWidth = 40;
+            int tileHeight = 60;
 
             grid = new PictureBox[tileWidth, tileHeight];
 
@@ -58,11 +57,6 @@ namespace ExternalTool
 
                     grid[col, row].BackColor = Color.White;
 
-                    if (col == 20 && row == 20)
-                    {
-                        grid[col, row].BackColor = Color.Blue;
-                    }
-
                     groupBoxGrid.Controls.Add(grid[col, row]);
 
                     grid[col, row].Click += TileClicked!;
@@ -79,25 +73,13 @@ namespace ExternalTool
             {
                 PictureBox tile = (PictureBox)sender;
 
+                tile.BackColor = Color.Blue;
+
                 int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
                 int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
 
-                for (int i = 0; i < gridTiles.Count; i++)
-                {
-                    if (gridTiles[i].X < 40 && gridTiles[i].X >= 0 && gridTiles[i].Y < 40 && gridTiles[i].Y >= 0)
-                        grid[gridTiles[i].X, gridTiles[i].Y].BackColor = Color.White;
-
-                    gridTiles[i] = new Point(gridTiles[i].X + (20 - col),
-                        gridTiles[i].Y + (20 - row));
-
-                    if (gridTiles[i].X < 40 && gridTiles[i].X >= 0 && gridTiles[i].Y < 40 && gridTiles[i].Y >= 0)
-                        grid[gridTiles[i].X, gridTiles[i].Y].BackColor = Color.FromArgb(100 + (150 / (i + 1)), 0, 0);
-                }
-
-                movements.Add(new Vector2(col - 20, row - 20));
-
-                gridTiles.Add(new Point(20, 20));
-                grid[20, 20].BackColor = Color.Blue;
+                positions.Add(new Vector2(col, row));
+                types.Add(textBoxType.Text);
             }
         }
 
@@ -106,7 +88,7 @@ namespace ExternalTool
             SaveFileDialog fileSaver = new SaveFileDialog();
 
             fileSaver.Title = "Save a level file.";
-            fileSaver.Filter = "Level File|*.pattern";
+            fileSaver.Filter = "Level File|*.wave";
 
             DialogResult result = fileSaver.ShowDialog();
 
@@ -116,11 +98,12 @@ namespace ExternalTool
                 {
                     StreamWriter output = new StreamWriter(fileSaver.FileName);
 
-                    output.WriteLine($"{movements.Count}");
+                    output.WriteLine($"{positions.Count}");
 
-                    for (int i = 0; i < movements.Count; i++)
+                    for (int i = 0; i < positions.Count; i++)
                     {
-                        output.WriteLine($"{movements[i].X * 5},{movements[i].Y * 5}");
+                        output.WriteLine($"{types[i]}");
+                        output.WriteLine($"{positions[i].X * 5},{positions[i].Y * 5}");
                     }
 
                     output.Close();
@@ -135,5 +118,4 @@ namespace ExternalTool
             }
         }
     }
-
 }
