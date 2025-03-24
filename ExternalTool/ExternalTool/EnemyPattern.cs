@@ -117,6 +117,8 @@ namespace ExternalTool
                 {
                     StreamWriter output = new StreamWriter(fileSaver.FileName);
 
+                    output.WriteLine($"{movements.Count}");
+
                     for (int i = 0; i < movements.Count; i++)
                     {
                         output.WriteLine($"{movements[i].X * 5},{movements[i].Y * 5}");
