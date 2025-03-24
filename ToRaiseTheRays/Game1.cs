@@ -89,8 +89,9 @@ public class Game1 : Game
 
         List<string> files = new List<string>();
         files.Add("WaveTest.wave");
+        files.Add("NewWave.wave");
         
-        generator = new EnemyGenerator(files, 3, enemyTexture, playerPos);
+        generator = new EnemyGenerator(files, 10, enemyTexture, 44);
     }
 
     protected override void Update(GameTime gameTime) {
@@ -129,7 +130,7 @@ public class Game1 : Game
                 (ActiveEntities[i] is Enemy enemy && enemy.Health <= 0) ||
                 (ActiveEntities[i] is Player player && player.Health <= 0))
             {
-                ActiveEntities.RemoveAt(i);
+                 ActiveEntities.RemoveAt(i);
             }
         }
 

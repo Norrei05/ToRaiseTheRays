@@ -120,7 +120,7 @@ namespace ExternalTool
 
                     for (int i = 0; i < movements.Count; i++)
                     {
-                        output.WriteLine($"{movements[i].X * 5},{movements[i].Y * 5}");
+                        output.WriteLine($"{movements[i].X * 10},{movements[i].Y * 10}");
                     }
 
                     output.Close();

@@ -26,8 +26,8 @@ namespace ExternalTool
             types = new List<string>();
             positions = new List<Vector2>();
 
-            int tileWidth = 40;
-            int tileHeight = 60;
+            int tileWidth = 60;
+            int tileHeight = 80;
 
             grid = new PictureBox[tileWidth, tileHeight];
 
@@ -103,7 +103,7 @@ namespace ExternalTool
                     for (int i = 0; i < positions.Count; i++)
                     {
                         output.WriteLine($"{types[i]}");
-                        output.WriteLine($"{positions[i].X * 5},{positions[i].Y * 5}");
+                        output.WriteLine($"{positions[i].X * 10},{positions[i].Y * 10}");
                     }
 
                     output.Close();

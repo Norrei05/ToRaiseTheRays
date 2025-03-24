@@ -18,17 +18,17 @@ namespace ToRaiseTheRays
         private int curWave;
 
         private Texture2D enemyTexture;
-        private Rectangle enemyRectangle; 
+        private int dimensions; 
 
-        public EnemyGenerator(List<string> waves, int spawnTime, Texture2D enemyTexture, Rectangle enemyRectangle)
+        public EnemyGenerator(List<string> waves, int spawnTime, Texture2D enemyTexture, int dimensions)
         {
             this.waves = waves;
             this.spawnTime = spawnTime;
-            timer = 0;
+            timer = spawnTime / 2;
             curWave = 0;
 
             this.enemyTexture = enemyTexture;
-            this.enemyRectangle = enemyRectangle;
+            this.dimensions = dimensions;
         }
 
         public void Update(GameTime gameTime)
@@ -41,7 +41,7 @@ namespace ToRaiseTheRays
 
                 try
                 {
-                    input = new StreamReader(waves[curWave]);
+                    input = new StreamReader("..\\..\\..\\"  + waves[curWave]);
 
                     int numEnemies = int.Parse(input.ReadLine());
 
@@ -54,7 +54,7 @@ namespace ToRaiseTheRays
                         int posX = int.Parse(pos.Substring(0, pos.IndexOf(",")));
                         int posY = int.Parse(pos.Substring(pos.IndexOf(",") + 1));
 
-                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, enemyRectangle, new Vector2(2, 0), Alignment.ENEMY, new Vector2(posX, posY), 5, filename));
+                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, dimensions, dimensions), new Vector2(5, 0), Alignment.ENEMY, new Vector2(posX, posY), 5, filename));
                     }
                 }
                 catch (Exception e)

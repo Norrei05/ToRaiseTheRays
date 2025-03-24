@@ -25,7 +25,12 @@ public class Enemy : GameObject {
     private string filename;
 
     public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string filename) 
-        : base(texture, position, velocity, alignment) {
+        : base(texture, position, velocity, alignment)
+    {
+        Health = 30;
+        ShotDamage = 10;
+        CollisionDamage = 10;
+
         Spawning = true;
         
         spawnTarget = spawnPosition;
@@ -36,14 +41,14 @@ public class Enemy : GameObject {
         Random random = new Random();
         int edge = random.Next(3); // 0 = top, 1 = left, 2 = right
         
-        position.X = edge switch {
-            0 => random.Next(Game1.ScreenBounds.Width - position.Width),
-            1 => -position.Width,
+        this.position.X = edge switch {
+            0 => random.Next(Game1.ScreenBounds.Width - this.position.Width),
+            1 => -this.position.Width,
             _ => Game1.ScreenBounds.Width
         };
         
         // Only randomize Y if not coming from the top
-        position.Y = edge == 0 ? -position.Height : random.Next(Game1.ScreenBounds.Height / 3) - position.Height;
+        this.position.Y = edge == 0 ? -this.position.Height : random.Next(Game1.ScreenBounds.Height / 3) - this.position.Height;
 
         movements = new List<Vector2>();
 
@@ -57,7 +62,8 @@ public class Enemy : GameObject {
     }
 
     public void Move(GameTime gameTime) {
-        if (Spawning) {
+        if (Spawning) 
+        {
             timer += gameTime.ElapsedGameTime.TotalSeconds;
             float t = (float)(timer / spawnDuration);
             
@@ -105,7 +111,10 @@ public class Enemy : GameObject {
         if (other.Alignment == Alignment) return;
         if (position.Intersects(other.position)) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
-            else if (other is Player) Health = 0; // Dies instantly on crash
+            else if (other is Player)
+            {
+                Health = 0; // Dies instantly on crash
+            }
         }
     }
 
@@ -117,7 +126,7 @@ public class Enemy : GameObject {
 
         try
         {
-            input = new StreamReader(filename + ".pattern");
+            input = new StreamReader("..\\..\\..\\" + filename + ".pattern");
 
             int numMoves = int.Parse(input.ReadLine());
 
