@@ -17,6 +17,8 @@ public class Game1 : Game
     private Dictionary<string, Texture2D> playerSprites;
     public static Texture2D BulletTexture { get; private set; }
 
+    private Texture2D enemyTexture;
+
     // private Texture2D fogTexture;
 
     private Texture2D dayTileset;
@@ -26,6 +28,9 @@ public class Game1 : Game
     private Rectangle[,] map;
 
     private Player player;
+
+    private EnemyGenerator generator;
+
     public static List<GameObject> ActiveEntities { get; private set; }
 
     public Game1()
@@ -61,6 +66,8 @@ public class Game1 : Game
         PapyrusFont = Content.Load<SpriteFont>("Papyrus");
         BulletTexture = Content.Load<Texture2D>("Bullet2");
 
+        enemyTexture = Content.Load<Texture2D>("basic_enemy_1");
+
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
         {
@@ -79,6 +86,11 @@ public class Game1 : Game
         Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 44, 44);
         player = new Player(playerSprites, playerPos, null); // Passing null instead of fogTexture
         ActiveEntities.Add(player);
+
+        List<string> files = new List<string>();
+        files.Add("WaveTest.Wave");
+        
+        generator = new EnemyGenerator(files, 3, enemyTexture, playerPos);
     }
 
     protected override void Update(GameTime gameTime) {
@@ -86,6 +98,8 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
         player.Shoot();
+
+        generator.Update(gameTime);
 
         // Do all movement before checking collision.
         foreach (GameObject entity in ActiveEntities) entity.Move();

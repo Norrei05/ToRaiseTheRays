@@ -6,7 +6,7 @@ using System.IO;
 
 namespace ToRaiseTheRays;
 
-public abstract class Enemy : GameObject {
+public class Enemy : GameObject {
     public bool Spawning { get; protected set; }
     public int Health { get; protected set; }
     public Vector2 Direction { get; protected set; }
@@ -22,7 +22,9 @@ public abstract class Enemy : GameObject {
     private int patternIndex;
     private Vector2 target;
 
-    protected Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string filename) 
+    private string filename;
+
+    public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string filename) 
         : base(texture, position, velocity, alignment) {
         Spawning = true;
         
@@ -50,6 +52,8 @@ public abstract class Enemy : GameObject {
         patternIndex = 0;
 
         target = spawnPosition + movements[patternIndex];
+
+        this.filename = filename;
     }
 
     public void Move() {
@@ -94,6 +98,8 @@ public abstract class Enemy : GameObject {
                 timer = 0;
             }
         }
+
+        if (!Game1.ScreenBounds.Intersects(position)) Health = 0;
     }
 
     public override void CheckCollision(GameObject other) {
