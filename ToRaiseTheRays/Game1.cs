@@ -9,16 +9,15 @@ namespace ToRaiseTheRays;
 public class Game1 : Game
 {
     public static Rectangle ScreenBounds { get; private set; }
-
     private GraphicsDeviceManager _graphics;
     public static SpriteBatch SpriteBatch { get; private set; }
     public static SpriteFont PapyrusFont { get; private set; }
-
+   
     private Dictionary<string, Texture2D> playerSprites;
     public static Texture2D BulletTexture { get; private set; }
-
     // private Texture2D fogTexture;
 
+    private string gameState;
     private Texture2D dayTileset;
 
     private Texture2D nightTileset;
@@ -30,11 +29,6 @@ public class Game1 : Game
 
     public Game1()
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont font;
-        private string gameState;
-
         _graphics = new GraphicsDeviceManager(this)
         {
             PreferredBackBufferWidth = 600,   // Window width
@@ -110,8 +104,8 @@ public class Game1 : Game
         // Remove dead entities
         for (int i = ActiveEntities.Count - 1; i >= 0; i--)
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            font=Content.Load<SpriteFont>("Papyrus");
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            PapyrusFont = Content.Load<SpriteFont>("Papyrus");
             // Starting gamestate is the title screen
             gameState = "title";
             if ((ActiveEntities[i] is Bullet bullet && !bullet.Alive) ||
@@ -161,15 +155,6 @@ public class Game1 : Game
         // Loop through empty 2D array and fill it with the dimensions of each tile
         for (int col = 0; col < tileDivides.GetLength(0); col++)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin();
-            if (gameState == "title")
-            {
-                _spriteBatch.DrawString(font, "TO RAISE THE RAYS", new Vector2(180, 190), Color.OrangeRed);
-                _spriteBatch.DrawString(font, "PRESS ENTER TO BEGIN", new Vector2(160, 230), Color.OrangeRed);
-            }
-            _spriteBatch.End();
-            base.Draw(gameTime);
             for (int row = 0; row < tileDivides.GetLength(1); row++)
                 tileDivides[col, row] = new Rectangle(col * 16, row * 16, 16, 16);
         }
@@ -225,7 +210,8 @@ public class Game1 : Game
                 }
             }
         }
-        private void setState(string state)
+    }
+    private void setState(string state)
         {
             switch (state)
             {
@@ -253,5 +239,4 @@ public class Game1 : Game
                     break;
             }
         }
-    }
 }
