@@ -67,6 +67,7 @@ namespace ExternalTool
                     groupBoxGrid.Controls.Add(grid[col, row]);
 
                     grid[col, row].Click += TileClicked!;
+                    //grid[col, row].DoubleClick += TileDoubleClicked!;
                 }
             }
         }
@@ -83,15 +84,46 @@ namespace ExternalTool
             {
                 PictureBox tile = (PictureBox)sender;
 
-                tile.BackColor = Color.Blue;
+                int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
+                int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
+
+
+                if (tile.BackColor == Color.White)
+                {
+                    tile.BackColor = Color.Blue;
+
+                    positions.Add(new Vector2(col, row));
+                    types.Add(textBoxType.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Can't Place Enemy", "An enemy is already placed in that location. Right click to remove it", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+               
+            }
+        }
+
+        /*
+        public void TileDoubleClicked(object sender, EventArgs e)
+        {
+            if (sender is PictureBox)
+            {
+                PictureBox tile = (PictureBox)sender;
 
                 int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
                 int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
 
-                positions.Add(new Vector2(col, row));
-                types.Add(textBoxType.Text);
+                if (tile.BackColor != Color.White)
+                {
+                    tile.BackColor = Color.White;
+
+                    positions.Remove(new Vector2(col, row));
+                    types.Remove(textBoxType.Text);
+                }
+                
             }
         }
+        */
 
         /// <summary>
         /// Saves the information on the enemy types and starting location in a wave

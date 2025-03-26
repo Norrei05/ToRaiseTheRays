@@ -117,7 +117,7 @@ public class Enemy : GameObject {
 
             // When movement to one location concluded, the index of movements updates
             // in order for the enemy to move to its next position
-            if (timer >= spawnDuration)
+            if (timer >= timeReq)
             {
                 patternIndex++;
                 
