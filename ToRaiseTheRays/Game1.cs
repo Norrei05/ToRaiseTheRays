@@ -87,11 +87,11 @@ public class Game1 : Game
         }
 
         // Load in fog of war asset
-        // fogTexture = Content.Load<Texture2D>("Fog_Of_War");
+        //fogTexture = Content.Load<Texture2D>("Fog_Of_War");
 
         // Load in tilesets and generate a map of source rectangles based on placement of tiles in tileset images
-        dayTileset = Content.Load<Texture2D>("Title_Day");
-        nightTileset = Content.Load<Texture2D>("Title_Night");
+        dayTileset = Content.Load<Texture2D>("Tiles_Day_1");
+        nightTileset = Content.Load<Texture2D>("Tiles_Night_1");
         CreateMap();
 
         // Create player of size 44x44 at the bottom of the screen
@@ -164,7 +164,7 @@ public class Game1 : Game
         for (int col = 0; col < map.GetLength(0); col++)
         {
             for (int row = 0; row < map.GetLength(1); row++)
-                SpriteBatch.Draw(nightTileset, new Vector2(col * 16, row * 16), map[col, row], Color.White);
+                SpriteBatch.Draw(nightTileset, new Vector2(col * 16, row * 16), map[col, row], Color.LightSlateGray);
         }
 
         foreach (GameObject entity in ActiveEntities) entity.Draw();

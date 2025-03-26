@@ -200,7 +200,7 @@
 /processorParam:TextureFormat=Color
 /build:PlayerSprites/Barque_UR.png
 
-#begin Title_Day.png
+#begin Tiles_Day_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -210,7 +210,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Title_Day.png
+/build:Tiles_Day_1.png
+
+#begin Tiles_Night_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles_Night_1.png
 
 #begin Title_Day.png
 /importer:TextureImporter
