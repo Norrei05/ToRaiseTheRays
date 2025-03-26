@@ -47,7 +47,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:basic_enemy_1.png;Enemy_1.png
+/build:basic_enemy_1.png
 
 #begin Bullet.png
 /importer:TextureImporter

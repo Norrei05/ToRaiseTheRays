@@ -8,6 +8,8 @@ namespace ToRaiseTheRays;
 
 public class Game1 : Game
 {
+    // Fields/Properties
+
     public static Rectangle ScreenBounds { get; private set; }
     private GraphicsDeviceManager _graphics;
     public static SpriteBatch SpriteBatch { get; private set; }
@@ -15,6 +17,8 @@ public class Game1 : Game
    
     private Dictionary<string, Texture2D> playerSprites;
     public static Texture2D BulletTexture { get; private set; }
+    private Texture2D enemyTexture;
+
     // private Texture2D fogTexture;
 
     private string gameState;
@@ -25,7 +29,12 @@ public class Game1 : Game
     private Rectangle[,] map;
 
     private Player player;
+
+    private EnemyGenerator generator;
+
     public static List<GameObject> ActiveEntities { get; private set; }
+
+    // Constructor
 
     public Game1()
     {
@@ -43,6 +52,11 @@ public class Game1 : Game
         ActiveEntities = new List<GameObject>();
     }
 
+    // Methods
+
+    /// <summary>
+    /// Initializes field
+    /// </summary>
     protected override void Initialize()
     {
         ScreenBounds = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -53,12 +67,17 @@ public class Game1 : Game
         base.Initialize();
     }
 
+    /// <summary>
+    /// Loads assets and images in gameloop and initializes fields requiring such assets
+    /// </summary>
     protected override void LoadContent()
     {
         SpriteBatch = new SpriteBatch(GraphicsDevice);
 
         PapyrusFont = Content.Load<SpriteFont>("Papyrus");
         BulletTexture = Content.Load<Texture2D>("Bullet2");
+
+        enemyTexture = Content.Load<Texture2D>("basic_enemy_1");
 
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
@@ -72,7 +91,7 @@ public class Game1 : Game
         }
 
         // Load in fog of war asset
-        // fogTexture = Content.Load<Texture2D>("Fog_Of_War");
+        //fogTexture = Content.Load<Texture2D>("Fog_Of_War");
 
         // Load in tilesets and generate a map of source rectangles based on placement of tiles in tileset images
         dayTileset = Content.Load<Texture2D>("Tiles_Day_1");
@@ -83,16 +102,39 @@ public class Game1 : Game
         Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 100, 100);
         player = new Player(playerSprites, playerPos, null); // Passing null instead of fogTexture
         ActiveEntities.Add(player);
+
+        List<string> files = new List<string>();
+        files.Add("SlowAdvance.wave");
+        //files.Add("WaveTest.wave");
+        //files.Add("NewWave.wave");
+        
+        generator = new EnemyGenerator(files, 10, enemyTexture, 44);
     }
 
+    /// <summary>
+    /// Update fields in gameloop
+    /// </summary>
     protected override void Update(GameTime gameTime) {
         // Don't ask me why this line is so long. It's the default exit line.
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
         player.Shoot();
 
+        generator.Update(gameTime);
+
         // Do all movement before checking collision.
-        foreach (GameObject entity in ActiveEntities) entity.Move();
+        foreach (GameObject entity in ActiveEntities)
+        {
+            if (entity is Enemy)
+            {
+                Enemy enemy = (Enemy)entity;
+                enemy.Move(gameTime);
+            }
+            else
+            {
+                entity.Move();
+            }
+        }
 
         foreach (GameObject entity in ActiveEntities)
         {
@@ -112,13 +154,16 @@ public class Game1 : Game
                 (ActiveEntities[i] is Enemy enemy && enemy.Health <= 0) ||
                 (ActiveEntities[i] is Player player && player.Health <= 0))
             {
-                ActiveEntities.RemoveAt(i);
+                 ActiveEntities.RemoveAt(i);
             }
         }
 
         base.Update(gameTime);
     }
 
+    /// <summary>
+    /// Draws images and assets in gameloop
+    /// </summary>
     protected override void Draw(GameTime gameTime) {        
         GraphicsDevice.Clear(Color.Sienna);
 
