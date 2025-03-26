@@ -1,3 +1,2 @@
-﻿
-using var game = new ToRaiseTheRays.Game1();
+﻿using var game = new ToRaiseTheRays.Game1();
 game.Run();
