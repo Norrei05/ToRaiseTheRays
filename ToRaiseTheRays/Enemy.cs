@@ -20,6 +20,8 @@ public class Enemy : GameObject {
 
     private List<Vector2> movements;
     private int patternIndex;
+
+    private Vector2 lastPosition;
     private Vector2 target;
 
     private string filename;
@@ -56,6 +58,7 @@ public class Enemy : GameObject {
 
         patternIndex = 0;
 
+        lastPosition = new Vector2(this.position.X, this.position.Y);
         target = spawnPosition + movements[patternIndex];
 
         this.filename = filename;
@@ -67,13 +70,15 @@ public class Enemy : GameObject {
             timer += gameTime.ElapsedGameTime.TotalSeconds;
             float t = (float)(timer / spawnDuration);
             
-            position.X = (int)MathHelper.Lerp(position.X, (int)spawnTarget.X, t);
-            position.Y = (int)MathHelper.Lerp(position.Y, (int)spawnTarget.Y, t);
+            position.X = (int)MathHelper.Lerp(lastPosition.X, (int)spawnTarget.X, t);
+            position.Y = (int)MathHelper.Lerp(lastPosition.Y, (int)spawnTarget.Y, t);
 
             if (timer >= spawnDuration) 
             {
                 Spawning = false;
                 timer = 0;
+
+                lastPosition = new Vector2(position.X, position.Y);
             }
         }
         else
@@ -87,8 +92,8 @@ public class Enemy : GameObject {
 
             float t = (float)(timer / timeReq);
 
-            position.X = (int)MathHelper.Lerp(position.X, (int)target.X, t);
-            position.Y = (int)MathHelper.Lerp(position.Y, (int)target.Y, t);
+            position.X = (int)MathHelper.Lerp(lastPosition.X, (int)target.X, t);
+            position.Y = (int)MathHelper.Lerp(lastPosition.Y, (int)target.Y, t);
 
             if (timer >= spawnDuration)
             {
@@ -100,6 +105,7 @@ public class Enemy : GameObject {
                 }
 
                 target = new Vector2(position.X + movements[patternIndex].X, position.Y + movements[patternIndex].Y);
+                lastPosition = new Vector2(position.X, position.Y);
 
                 timer = 0;
             }
