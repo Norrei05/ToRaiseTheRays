@@ -11,13 +11,20 @@ using System.Windows.Forms;
 
 namespace ExternalTool
 {
+    /// <summary>
+    /// Form for creating an enemy wave formation
+    /// </summary>
     public partial class WaveFormation : Form
     {
+        // Fields
+
         private PictureBox[,] grid;
         private Color currentColor;
 
         private List<string> types;
         private List<Vector2> positions;
+
+        // Constructors
 
         public WaveFormation()
         {
@@ -64,9 +71,12 @@ namespace ExternalTool
             }
         }
 
+        // Methods
+
         /// <summary>
-        /// Changes the color of the picture box color based on the currently selected color
-        /// </summary>
+        /// Adds an enemy to the wave with a movement pattern determined by the filename in
+        /// the text box and a location determined by the point clicked on the grid
+        /// </summary> 
         public void TileClicked(object sender, EventArgs e)
         {
             if (sender is PictureBox)
@@ -83,6 +93,19 @@ namespace ExternalTool
             }
         }
 
+        /// <summary>
+        /// Saves the information on the enemy types and starting location in a wave
+        /// 
+        /// File Format:
+        /// 
+        /// First Line: Number of Enemies 
+        /// (helps file reading to ensure the required number of lines are read)
+        /// 
+        /// Repeatable Lines:
+        /// 
+        /// Line 1: string for the filename of enemy type (movement patterns)
+        /// Line 2: {x location}, {y location} - enemy goes to this starting point on spawn
+        /// </summary>
         private void buttonSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog fileSaver = new SaveFileDialog();

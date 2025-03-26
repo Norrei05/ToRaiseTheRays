@@ -11,12 +11,19 @@ using System.Numerics;
 
 namespace ExternalTool
 {
+    /// <summary>
+    /// Form for creating an enemy movement pattern
+    /// </summary>
     public partial class EnemyPattern : Form
     {
+        // Fields
+
         private PictureBox[,] grid;
 
         private List<Point> gridTiles;
         private List<Vector2> movements;
+
+        // Constructor
 
         public EnemyPattern()
         {
@@ -70,8 +77,12 @@ namespace ExternalTool
             }
         }
 
+        // Methods
+
         /// <summary>
-        /// Changes the color of the picture box color based on the currently selected color
+        /// Adds a movement to the pattern with an x and y displacement based on the location clicked
+        /// 
+        /// The grid updates to show the final location of the movement as the center of the grid
         /// </summary>
         public void TileClicked(object sender, EventArgs e)
         {
@@ -101,6 +112,14 @@ namespace ExternalTool
             }
         }
 
+        /// <summary>
+        /// Saves information on an enemy movement pattern
+        /// 
+        /// File Format:
+        /// 
+        /// First Line: number of movements
+        /// Repeatable Lines: {x displacement},{y displacement}
+        /// </summary>
         private void buttonSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog fileSaver = new SaveFileDialog();

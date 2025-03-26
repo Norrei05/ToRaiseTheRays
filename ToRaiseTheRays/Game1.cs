@@ -8,6 +8,8 @@ namespace ToRaiseTheRays;
 
 public class Game1 : Game
 {
+    // Fields/Properties
+
     public static Rectangle ScreenBounds { get; private set; }
 
     private GraphicsDeviceManager _graphics;
@@ -33,6 +35,8 @@ public class Game1 : Game
 
     public static List<GameObject> ActiveEntities { get; private set; }
 
+    // Constructor
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this)
@@ -49,6 +53,11 @@ public class Game1 : Game
         ActiveEntities = new List<GameObject>();
     }
 
+    // Methods
+
+    /// <summary>
+    /// Initializes field
+    /// </summary>
     protected override void Initialize()
     {
         ScreenBounds = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -59,6 +68,9 @@ public class Game1 : Game
         base.Initialize();
     }
 
+    /// <summary>
+    /// Loads assets and images in gameloop and initializes fields requiring such assets
+    /// </summary>
     protected override void LoadContent()
     {
         SpriteBatch = new SpriteBatch(GraphicsDevice);
@@ -94,6 +106,9 @@ public class Game1 : Game
         generator = new EnemyGenerator(files, 10, enemyTexture, 44);
     }
 
+    /// <summary>
+    /// Update fields in gameloop
+    /// </summary>
     protected override void Update(GameTime gameTime) {
         // Don't ask me why this line is so long. It's the default exit line.
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
@@ -137,6 +152,9 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
+    /// <summary>
+    /// Draws images and assets in gameloop
+    /// </summary>
     protected override void Draw(GameTime gameTime) {        
         GraphicsDevice.Clear(Color.Sienna);
 
