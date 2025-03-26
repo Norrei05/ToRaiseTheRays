@@ -100,8 +100,9 @@ public class Game1 : Game
         ActiveEntities.Add(player);
 
         List<string> files = new List<string>();
-        files.Add("WaveTest.wave");
-        files.Add("NewWave.wave");
+        files.Add("SlowAdvance.wave");
+        //files.Add("WaveTest.wave");
+        //files.Add("NewWave.wave");
         
         generator = new EnemyGenerator(files, 10, enemyTexture, 44);
     }
