@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.Devices;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,6 +24,9 @@ namespace ExternalTool
 
         private List<string> types;
         private List<Vector2> positions;
+
+        private List<string> patternNames;
+        private bool patternChosen;
 
         // Constructors
 
@@ -67,9 +71,36 @@ namespace ExternalTool
                     groupBoxGrid.Controls.Add(grid[col, row]);
 
                     grid[col, row].Click += TileClicked!;
-                    //grid[col, row].DoubleClick += TileDoubleClicked!;
                 }
             }
+
+            // Loads Pattern Names
+
+            patternNames = new List<string>();
+
+            StreamReader input = null!;
+
+            try
+            {
+                input = new StreamReader("..\\..\\..\\PatternNames.txt");
+
+                string line = null!;
+                while ((line = input.ReadLine()!) != null)
+                {
+                    patternNames.Add(line);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+            finally
+            {
+                if (input != null)
+                    input.Close();
+            }
+
+            patternChosen = false;
         }
 
         // Methods
@@ -80,50 +111,39 @@ namespace ExternalTool
         /// </summary> 
         public void TileClicked(object sender, EventArgs e)
         {
-            if (sender is PictureBox)
+            if (patternChosen)
             {
-                PictureBox tile = (PictureBox)sender;
-
-                int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
-                int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
-
-
-                if (tile.BackColor == Color.White)
+                if (sender is PictureBox)
                 {
-                    tile.BackColor = Color.Blue;
+                    PictureBox tile = (PictureBox)sender;
 
-                    positions.Add(new Vector2(col, row));
-                    types.Add(textBoxType.Text);
+                    int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
+                    int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
+
+
+                    if (tile.BackColor == Color.White)
+                    {
+                        tile.BackColor = Color.Blue;
+
+                        positions.Add(new Vector2(col, row));
+                        types.Add(textBoxType.Text);
+                    }
+                    else
+                    {
+                        tile.BackColor = Color.White;
+
+                        positions.Remove(new Vector2(col, row));
+                        types.Remove(textBoxType.Text);
+                    }
+
                 }
-                else
-                {
-                    MessageBox.Show("Can't Place Enemy", "An enemy is already placed in that location. Right click to remove it", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-               
             }
-        }
-
-        /*
-        public void TileDoubleClicked(object sender, EventArgs e)
-        {
-            if (sender is PictureBox)
+            else
             {
-                PictureBox tile = (PictureBox)sender;
-
-                int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
-                int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
-
-                if (tile.BackColor != Color.White)
-                {
-                    tile.BackColor = Color.White;
-
-                    positions.Remove(new Vector2(col, row));
-                    types.Remove(textBoxType.Text);
-                }
-                
+                MessageBox.Show("Must choose proper enemy pattern", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            
         }
-        */
 
         /// <summary>
         /// Saves the information on the enemy types and starting location in a wave
@@ -171,6 +191,19 @@ namespace ExternalTool
                     Console.WriteLine("Error: " + ex.Message);
                 }
             }
+        }
+
+        private void textBoxType_TextChanged(object sender, EventArgs e)
+        {
+            bool patternFound = false;
+
+            for (int i = 0; i < patternNames.Count && patternFound == false; i++)
+            {
+                if (textBoxType.Text == patternNames[i])
+                    patternFound = true;
+            }
+
+            patternChosen = patternFound;
         }
     }
 }

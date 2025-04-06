@@ -61,6 +61,7 @@
             textBoxType.Name = "textBoxType";
             textBoxType.Size = new Size(299, 23);
             textBoxType.TabIndex = 1;
+            textBoxType.TextChanged += textBoxType_TextChanged;
             // 
             // buttonSave
             // 

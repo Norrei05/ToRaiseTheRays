@@ -23,6 +23,8 @@ namespace ExternalTool
         private List<Point> gridTiles;
         private List<Vector2> movements;
 
+        private List<string> patternNames;
+
         // Constructor
 
         public EnemyPattern()
@@ -74,6 +76,32 @@ namespace ExternalTool
 
                     grid[col, row].Click += TileClicked!;
                 }
+            }
+
+            // Loads Pattern Names
+
+            patternNames = new List<string>();
+
+            StreamReader input = null!;
+
+            try
+            {
+                input = new StreamReader("..\\..\\..\\PatternNames.txt");
+
+                string line = null!;
+                while ((line = input.ReadLine()!) != null)
+                {
+                    patternNames.Add(line);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+            finally
+            {
+                if (input != null)
+                    input.Close();
             }
         }
 
@@ -133,6 +161,8 @@ namespace ExternalTool
             {
                 try
                 {
+                    // Saves the actual file
+
                     StreamWriter output = new StreamWriter(fileSaver.FileName);
 
                     output.WriteLine($"{movements.Count}");
@@ -143,6 +173,18 @@ namespace ExternalTool
                     }
 
                     output.Close();
+
+                    // Adds filename to file, so that its existence is recorded
+
+                    StreamWriter nameSaver = new StreamWriter("..\\..\\..\\PatternNames.txt");
+                    patternNames.Add(fileSaver.FileName.Substring(fileSaver.FileName.LastIndexOf("\\") + 1, fileSaver.FileName.LastIndexOf(".") - fileSaver.FileName.LastIndexOf("\\") - 1));
+
+                    for (int i = 0; i < patternNames.Count; i++)
+                    {
+                        nameSaver.WriteLine(patternNames[i]);
+                    }
+
+                    nameSaver.Close();
 
                     // Alerts the user to successful save
                     MessageBox.Show("File saved successfully.", "File saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
