@@ -25,6 +25,8 @@ namespace ExternalTool
         private List<string> types;
         private List<Vector2> positions;
 
+        private List<int[]> enemyInfo;
+
         private List<string> patternNames;
         private bool patternChosen;
 
@@ -36,6 +38,8 @@ namespace ExternalTool
 
             types = new List<string>();
             positions = new List<Vector2>();
+
+            enemyInfo = new List<int[]>();
 
             int tileWidth = 60;
             int tileHeight = 80;
@@ -127,13 +131,22 @@ namespace ExternalTool
 
                         positions.Add(new Vector2(col, row));
                         types.Add(textBoxType.Text);
+
+                        int[] info = { int.Parse(textBoxHealth.Text), 
+                            int.Parse(textBoxSpeed.Text), 
+                            int.Parse(textBoxShot.Text),
+                            int.Parse(textBoxCollision.Text), 
+                            int.Parse(textBoxWidth.Text), 
+                            int.Parse(textBoxHeight.Text)};
+
+                        enemyInfo.Add(info);
                     }
                     else
                     {
                         tile.BackColor = Color.White;
 
+                        types.RemoveAt(positions.IndexOf(new Vector2(col, row)));
                         positions.Remove(new Vector2(col, row));
-                        types.Remove(textBoxType.Text);
                     }
 
                 }
@@ -179,6 +192,7 @@ namespace ExternalTool
                     {
                         output.WriteLine($"{types[i]}");
                         output.WriteLine($"{positions[i].X * 10},{positions[i].Y * 10}");
+                        output.WriteLine($"{enemyInfo[i][0]},{enemyInfo[i][1]},{enemyInfo[i][2]},{enemyInfo[i][3]},{enemyInfo[i][4]},{enemyInfo[i][5]}");
                     }
 
                     output.Close();
@@ -204,6 +218,22 @@ namespace ExternalTool
             }
 
             patternChosen = patternFound;
+        }
+
+        private void InputIsInteger(object sender, EventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                TextBox myInput = (TextBox) sender;
+
+                int result = 0;
+
+                if (!int.TryParse(myInput.Text, out result))
+                {
+                    MessageBox.Show("The input in this text box must be an integer", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    myInput.Text = "10";
+                }
+            }
         }
     }
 }

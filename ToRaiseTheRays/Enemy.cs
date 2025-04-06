@@ -29,12 +29,13 @@ public class Enemy : GameObject {
 
     // Constructors
 
-    public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string filename) 
+    public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string filename,
+        int health, int shotDamage, int collisionDamage) 
         : base(texture, position, velocity, alignment)
     {
-        Health = 30;
-        ShotDamage = 10;
-        CollisionDamage = 10;
+        Health = health;
+        ShotDamage = shotDamage;
+        CollisionDamage = collisionDamage;
 
         Spawning = true;
         

@@ -105,9 +105,10 @@ public class Game1 : Game
 
         List<string> files = new List<string>();
         //files.Add("DelayedTest.wave");
-        files.Add("SlowAdvance.wave");
+        //files.Add("SlowAdvance.wave");
         //files.Add("WaveTest.wave");
-        files.Add("NewWave.wave");
+        //files.Add("NewWave.wave");
+        files.Add("ChangesTest.wave");
 
         generator = new EnemyGenerator(files, 10, enemyTexture, 44);
     }
