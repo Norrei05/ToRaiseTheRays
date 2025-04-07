@@ -32,6 +32,18 @@ public class Game1 : Game
 
     private EnemyGenerator generator;
 
+    private float animationSpeedFPS;
+    
+    private float secondsPerFrame;
+
+    private float timeCounter;
+
+    private float secondTimeCounter;
+
+    private Vector2 position;
+
+    private Vector2 newPosition;
+
     public static List<GameObject> ActiveEntities { get; private set; }
 
     // Constructor
@@ -63,6 +75,14 @@ public class Game1 : Game
 
         // Initialize empty 2D Rectangle array for the future map
         map = new Rectangle[ScreenBounds.Width / 16 + 1, (ScreenBounds.Height / 16) * 2];
+
+        animationSpeedFPS = 10;
+        secondsPerFrame = 1.0f / animationSpeedFPS;
+        timeCounter = 0;
+        secondTimeCounter = 0;
+
+        position = new Vector2(0, map[0, 0].Y);
+        newPosition = new Vector2(1, 1);
 
         base.Initialize();
     }
@@ -166,19 +186,35 @@ public class Game1 : Game
     /// </summary>
     protected override void Draw(GameTime gameTime) {        
         GraphicsDevice.Clear(Color.Sienna);
+        
+        setState(gameState);
 
         SpriteBatch.Begin();
 
-        // Loop through map, displaying it to screen
-        for (int col = 0; col < map.GetLength(0); col++)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-            setState(gameState);
+        timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            base.Update(gameTime);
-            for (int row = 0; row < map.GetLength(1); row++)
-                SpriteBatch.Draw(nightTileset, new Vector2(col * 16, row * 16), map[col, row], Color.LightSlateGray);
+        // Loops through every tile in map, displaying to screen and moving based on how long the game's been running
+        for (int col = map.GetLength(0) - 1; col >= 0; col--)
+        {
+            for (int row = map.GetLength(1) - 1; row >= 0; row--)
+            {
+                // Normal map that scrolls based on time
+                position = new Vector2((col * 16), 0 - row * 16 + (timeCounter * 400));
+                SpriteBatch.Draw(nightTileset, position, map[col, row], Color.LightSlateGray);
+
+                // Other tiles that fill in wherever the normal map does not cover
+                if (position.Y >= 0)
+                    newPosition = new Vector2(position.X, position.Y - ScreenBounds.Height);
+                else
+                    newPosition = new Vector2(position.X, position.Y + ScreenBounds.Height);
+
+                SpriteBatch.Draw(nightTileset, newPosition, map[col, row], Color.LightSlateGray);
+            }
         }
+
+        // Resets the timer whenever the map gets too low to prevent too large calculations
+        if (position.Y >= ScreenBounds.Height)
+            timeCounter = 0;
 
         foreach (GameObject entity in ActiveEntities) entity.Draw();
 
@@ -223,7 +259,7 @@ public class Game1 : Game
             map[map.GetLength(0) - 8, row] = sandToGrass;
         }
 
-        // Populate the rest of the map with randomized sand tiles, favoring empty sand over sand with rocks
+        // Populate the rest of the map with randomized sand tiles, favoring empty sand (cases 0-7) over sand with rocks (cases 8-9)
         Random randomGen = new Random();
 
         int tile;
@@ -236,13 +272,7 @@ public class Game1 : Game
 
                 switch (tile)
                 {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
+                    case 0: case 1: case 2: case 3: case 4: case 5: case 6:
                     case 7:
                         map[col, row] = tileDivides[0, 0];
                         break;
