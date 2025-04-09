@@ -248,7 +248,7 @@ namespace ExternalTool
             SaveFileDialog fileSaver = new SaveFileDialog();
 
             fileSaver.Title = "Save a level file.";
-            fileSaver.Filter = "Level File|*.bullet";
+            fileSaver.Filter = "Bullet File|*.bullet";
 
             DialogResult result = fileSaver.ShowDialog();
 

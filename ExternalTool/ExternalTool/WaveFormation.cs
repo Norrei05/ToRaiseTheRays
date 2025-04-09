@@ -23,12 +23,16 @@ namespace ExternalTool
         private Color currentColor;
 
         private List<string> types;
+        private List<string> bullets;
         private List<Vector2> positions;
 
         private List<int[]> enemyInfo;
 
         private List<string> patternNames;
         private bool patternChosen;
+
+        private List<string> bulletNames;
+        private bool bulletChosen;
 
         // Constructors
 
@@ -37,6 +41,7 @@ namespace ExternalTool
             InitializeComponent();
 
             types = new List<string>();
+            bullets = new List<string>();
             positions = new List<Vector2>();
 
             enemyInfo = new List<int[]>();
@@ -105,6 +110,34 @@ namespace ExternalTool
             }
 
             patternChosen = false;
+
+            // Loads Bullet Names
+
+            bulletNames = new List<string>();
+
+            StreamReader bulletInput = null!;
+
+            try
+            {
+                bulletInput = new StreamReader("..\\..\\..\\BulletNames.txt");
+
+                string line = null!;
+                while ((line = bulletInput.ReadLine()!) != null)
+                {
+                    bulletNames.Add(line);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+            finally
+            {
+                if (input != null)
+                    input.Close();
+            }
+
+            bulletChosen = false;
         }
 
         // Methods
@@ -115,7 +148,7 @@ namespace ExternalTool
         /// </summary> 
         public void TileClicked(object sender, EventArgs e)
         {
-            if (patternChosen)
+            if (patternChosen && bulletChosen)
             {
                 if (sender is PictureBox)
                 {
@@ -131,12 +164,13 @@ namespace ExternalTool
 
                         positions.Add(new Vector2(col, row));
                         types.Add(textBoxType.Text);
+                        bullets.Add(textBoxBullet.Text);
 
-                        int[] info = { int.Parse(textBoxHealth.Text), 
-                            int.Parse(textBoxSpeed.Text), 
+                        int[] info = { int.Parse(textBoxHealth.Text),
+                            int.Parse(textBoxSpeed.Text),
                             int.Parse(textBoxShot.Text),
-                            int.Parse(textBoxCollision.Text), 
-                            int.Parse(textBoxWidth.Text), 
+                            int.Parse(textBoxCollision.Text),
+                            int.Parse(textBoxWidth.Text),
                             int.Parse(textBoxHeight.Text)};
 
                         enemyInfo.Add(info);
@@ -151,11 +185,19 @@ namespace ExternalTool
 
                 }
             }
+            else if (!bulletChosen && !patternChosen)
+            {
+                MessageBox.Show("Must choose proper movement and bullet pattern", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!patternChosen)
+            {
+                MessageBox.Show("Must choose proper movement pattern", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             else
             {
-                MessageBox.Show("Must choose proper enemy pattern", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Must choose proper bullet pattern", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
 
         /// <summary>
@@ -191,6 +233,7 @@ namespace ExternalTool
                     for (int i = 0; i < positions.Count; i++)
                     {
                         output.WriteLine($"{types[i]}");
+                        output.WriteLine($"{bullets[i]}");
                         output.WriteLine($"{positions[i].X * 10},{positions[i].Y * 10}");
                         output.WriteLine($"{enemyInfo[i][0]},{enemyInfo[i][1]},{enemyInfo[i][2]},{enemyInfo[i][3]},{enemyInfo[i][4]},{enemyInfo[i][5]}");
                     }
@@ -224,7 +267,7 @@ namespace ExternalTool
         {
             if (sender is TextBox)
             {
-                TextBox myInput = (TextBox) sender;
+                TextBox myInput = (TextBox)sender;
 
                 int result = 0;
 
@@ -234,6 +277,19 @@ namespace ExternalTool
                     myInput.Text = "10";
                 }
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            bool bulletFound = false;
+
+            for (int i = 0; i < bulletNames.Count && bulletFound == false; i++)
+            {
+                if (textBoxBullet.Text == bulletNames[i])
+                    bulletFound = true;
+            }
+
+            bulletChosen = bulletFound;
         }
     }
 }
