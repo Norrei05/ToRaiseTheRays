@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -30,10 +31,25 @@ namespace ExternalTool
 
         public Bullet(List<Vector2> directions, List<Vector2> positions, List<int[]> bulletInfo, List<float> delays)
         {
-            this.directions = directions;
-            this.positions = positions;
-            this.bulletInfo = bulletInfo;
-            this.delays = delays;
+            foreach (Vector2 v in directions)
+            {
+                this.directions.Add(new Vector2(v.X, v.Y));
+            }
+
+            foreach (Vector2 v in positions)
+            {
+                this.positions.Add(new Vector2(v.X, v.Y));
+            }
+
+            foreach (int[] i in bulletInfo)
+            {
+                this.bulletInfo.Add(i);
+            }
+
+            foreach (float f in delays)
+            {
+                this.delays.Add(f);
+            }
         }
 
         // Method
