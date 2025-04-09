@@ -22,27 +22,23 @@ public class Game1 : Game
     // private Texture2D fogTexture;
 
     private string gameState;
-    private Texture2D dayTileset;
-
-    private Texture2D nightTileset;
-
-    private Rectangle[,] map;
 
     private Player player;
-
     private EnemyGenerator generator;
 
+    private Texture2D dayTileset;
+    private Texture2D nightTileset;
+    private Rectangle[,] map;
+
     private float animationSpeedFPS;
-    
     private float secondsPerFrame;
-
     private float timeCounter;
-
     private float secondTimeCounter;
 
     private Vector2 position;
-
     private Vector2 newPosition;
+
+    private Texture2D healthBar;
 
     public static List<GameObject> ActiveEntities { get; private set; }
 
@@ -102,12 +98,7 @@ public class Game1 : Game
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
         {
-            if (direction == "U")
-                playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"Barque_{direction}_Night"); 
-            else if (direction == "N")
-                playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"Barque_U_Night");
-            else
-                playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSprites/Barque_{direction}");
+            playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSprites/Barque_{direction}");
         }
 
         // Load in fog of war asset
@@ -122,6 +113,8 @@ public class Game1 : Game
         Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 100, 100);
         player = new Player(playerSprites, playerPos, null); // Passing null instead of fogTexture
         ActiveEntities.Add(player);
+
+        healthBar = Content.Load<Texture2D>("Health_Bar");
 
         List<string> files = new List<string>();
         //files.Add("ChangesTest.wave");
@@ -216,6 +209,12 @@ public class Game1 : Game
         if (position.Y >= ScreenBounds.Height)
             timeCounter = 0;
 
+        // Draws health bar to screen, updating based on the current player health
+        SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
+
+        if (player.Health > 0)
+            SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(31, ScreenBounds.Height - 55), Color.OrangeRed);
+
         foreach (GameObject entity in ActiveEntities) entity.Draw();
 
         SpriteBatch.End();
@@ -259,11 +258,11 @@ public class Game1 : Game
             map[map.GetLength(0) - 8, row] = sandToGrass;
         }
 
-        // Populate the rest of the map with randomized sand tiles, favoring empty sand (cases 0-7) over sand with rocks (cases 8-9)
         Random randomGen = new Random();
 
         int tile;
 
+        // Populate the rest of the map with randomized sand tiles, favoring empty sand (cases 0-7) over sand with rocks (cases 8-9)
         for (int col = 0; col < map.GetLength(0) - 8; col++)
         {
             for (int row = 0; row < map.GetLength(1); row++)
