@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,13 +16,25 @@ namespace ExternalTool
         private PictureBox[,] positionGrid;
         private PictureBox[,] directionGrid;
 
+        private Vector2 currentDirection;
+
+        private List<Vector2> directions;
+        private List<Vector2> positions;
+        private List<int[]> bulletInfo;
+        private List<float> delays;
+
         public BulletPattern()
         {
             InitializeComponent();
 
             CreateMaps();
 
+            currentDirection = new Vector2(0, 0);
 
+            directions = new List<Vector2>();
+            positions = new List<Vector2>();
+            bulletInfo = new List<int[]>();
+            delays = new List<float>();
         }
 
 
@@ -106,7 +119,17 @@ namespace ExternalTool
         }
         public void DirectionTileClicked(object sender, EventArgs e)
         {
+            if (sender is PictureBox)
+            {
+                PictureBox tile = (PictureBox)sender;
 
+                int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
+                int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
+
+                tile.BackColor = Color.Blue;
+
+                
+            }
         }
     }
 }
