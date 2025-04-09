@@ -47,22 +47,18 @@
             // 
             // groupBoxDirection
             // 
-            groupBoxDirection.Location = new Point(17, 293);
-            groupBoxDirection.Margin = new Padding(4, 5, 4, 5);
+            groupBoxDirection.Location = new Point(12, 176);
             groupBoxDirection.Name = "groupBoxDirection";
-            groupBoxDirection.Padding = new Padding(4, 5, 4, 5);
-            groupBoxDirection.Size = new Size(299, 245);
+            groupBoxDirection.Size = new Size(209, 147);
             groupBoxDirection.TabIndex = 0;
             groupBoxDirection.TabStop = false;
             groupBoxDirection.Text = "Direction";
             // 
             // groupBoxPosition
             // 
-            groupBoxPosition.Location = new Point(324, 213);
-            groupBoxPosition.Margin = new Padding(4, 5, 4, 5);
+            groupBoxPosition.Location = new Point(227, 128);
             groupBoxPosition.Name = "groupBoxPosition";
-            groupBoxPosition.Padding = new Padding(4, 5, 4, 5);
-            groupBoxPosition.Size = new Size(463, 517);
+            groupBoxPosition.Size = new Size(324, 310);
             groupBoxPosition.TabIndex = 1;
             groupBoxPosition.TabStop = false;
             groupBoxPosition.Text = "Position";
@@ -70,131 +66,124 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(17, 25);
-            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Location = new Point(12, 15);
             label1.Name = "label1";
-            label1.Size = new Size(83, 25);
+            label1.Size = new Size(54, 15);
             label1.TabIndex = 2;
             label1.Text = "Damage:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(17, 73);
-            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Location = new Point(12, 44);
             label2.Name = "label2";
-            label2.Size = new Size(66, 25);
+            label2.Size = new Size(42, 15);
             label2.TabIndex = 3;
             label2.Text = "Speed:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(17, 122);
-            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Location = new Point(12, 73);
             label3.Name = "label3";
-            label3.Size = new Size(47, 25);
+            label3.Size = new Size(30, 15);
             label3.TabIndex = 4;
             label3.Text = "Size:";
             // 
             // textBoxDamage
             // 
-            textBoxDamage.Location = new Point(116, 20);
-            textBoxDamage.Margin = new Padding(4, 5, 4, 5);
+            textBoxDamage.Location = new Point(81, 12);
             textBoxDamage.Name = "textBoxDamage";
-            textBoxDamage.Size = new Size(198, 31);
+            textBoxDamage.Size = new Size(140, 23);
             textBoxDamage.TabIndex = 6;
             textBoxDamage.Text = "10";
             // 
             // textBoxSpeed
             // 
-            textBoxSpeed.Location = new Point(116, 68);
-            textBoxSpeed.Margin = new Padding(4, 5, 4, 5);
+            textBoxSpeed.Location = new Point(81, 41);
             textBoxSpeed.Name = "textBoxSpeed";
-            textBoxSpeed.Size = new Size(198, 31);
+            textBoxSpeed.Size = new Size(140, 23);
             textBoxSpeed.TabIndex = 7;
             textBoxSpeed.Text = "10";
             // 
             // textBoxSize
             // 
-            textBoxSize.Location = new Point(116, 117);
-            textBoxSize.Margin = new Padding(4, 5, 4, 5);
+            textBoxSize.Location = new Point(81, 70);
             textBoxSize.Name = "textBoxSize";
-            textBoxSize.Size = new Size(198, 31);
+            textBoxSize.Size = new Size(140, 23);
             textBoxSize.TabIndex = 8;
             textBoxSize.Text = "20";
             // 
             // buttonAdd
             // 
-            buttonAdd.Location = new Point(17, 548);
-            buttonAdd.Margin = new Padding(4, 5, 4, 5);
+            buttonAdd.Location = new Point(12, 329);
             buttonAdd.Name = "buttonAdd";
-            buttonAdd.Size = new Size(299, 86);
+            buttonAdd.Size = new Size(209, 52);
             buttonAdd.TabIndex = 9;
             buttonAdd.Text = "Add Step";
             buttonAdd.UseVisualStyleBackColor = true;
+            buttonAdd.Click += buttonAdd_Click;
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(17, 644);
-            buttonSave.Margin = new Padding(4, 5, 4, 5);
+            buttonSave.Location = new Point(12, 386);
             buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(299, 86);
+            buttonSave.Size = new Size(209, 52);
             buttonSave.TabIndex = 10;
             buttonSave.Text = "Save";
             buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
             // 
             // textBoxShots
             // 
-            textBoxShots.Location = new Point(116, 165);
-            textBoxShots.Margin = new Padding(4, 5, 4, 5);
+            textBoxShots.Location = new Point(81, 99);
             textBoxShots.Name = "textBoxShots";
-            textBoxShots.Size = new Size(198, 31);
+            textBoxShots.Size = new Size(140, 23);
             textBoxShots.TabIndex = 11;
             textBoxShots.Text = "1";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(17, 170);
-            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Location = new Point(12, 102);
             label4.Name = "label4";
-            label4.Size = new Size(99, 25);
+            label4.Size = new Size(63, 15);
             label4.TabIndex = 12;
             label4.Text = "# of Shots:";
             // 
             // richTextBox1
             // 
-            richTextBox1.Location = new Point(324, 20);
-            richTextBox1.Margin = new Padding(4, 5, 4, 5);
+            richTextBox1.Location = new Point(227, 12);
             richTextBox1.Name = "richTextBox1";
             richTextBox1.ReadOnly = true;
-            richTextBox1.Size = new Size(461, 181);
+            richTextBox1.Size = new Size(324, 110);
             richTextBox1.TabIndex = 13;
             richTextBox1.Text = "";
             // 
             // textBoxDelay
             // 
-            textBoxDelay.Location = new Point(116, 213);
+            textBoxDelay.Location = new Point(81, 128);
+            textBoxDelay.Margin = new Padding(2);
             textBoxDelay.Name = "textBoxDelay";
-            textBoxDelay.Size = new Size(198, 31);
+            textBoxDelay.Size = new Size(140, 23);
             textBoxDelay.TabIndex = 14;
             textBoxDelay.Text = "0.5";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(17, 216);
+            label5.Location = new Point(12, 130);
+            label5.Margin = new Padding(2, 0, 2, 0);
             label5.Name = "label5";
-            label5.Size = new Size(60, 25);
+            label5.Size = new Size(39, 15);
             label5.TabIndex = 15;
             label5.Text = "Delay:";
             // 
             // BulletPattern
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(814, 750);
+            ClientSize = new Size(570, 450);
             Controls.Add(label5);
             Controls.Add(textBoxDelay);
             Controls.Add(richTextBox1);
@@ -210,7 +199,6 @@
             Controls.Add(label1);
             Controls.Add(groupBoxPosition);
             Controls.Add(groupBoxDirection);
-            Margin = new Padding(4, 5, 4, 5);
             Name = "BulletPattern";
             Text = "BulletPattern";
             ResumeLayout(false);

@@ -23,6 +23,8 @@ namespace ExternalTool
         private List<int[]> bulletInfo;
         private List<float> delays;
 
+        private List<Bullet> bullets;
+
         public BulletPattern()
         {
             InitializeComponent();
@@ -35,6 +37,8 @@ namespace ExternalTool
             positions = new List<Vector2>();
             bulletInfo = new List<int[]>();
             delays = new List<float>();
+
+            bullets = new List<Bullet>();
         }
 
 
@@ -115,20 +119,130 @@ namespace ExternalTool
 
         public void PositionTileClicked(object sender, EventArgs e)
         {
+            if (sender is PictureBox)
+            {
+                PictureBox tile = (PictureBox)sender;
 
+                float row = float.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
+                row = row - 2;
+
+                float col = float.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
+                col = col - 2;
+
+                directions.Add(currentDirection);
+                positions.Add(new Vector2(col * 5, row * 5));
+
+                int[] info = { int.Parse(textBoxDamage.Text),
+                    int.Parse(textBoxSpeed.Text),
+                    int.Parse(textBoxSize.Text),
+                    int.Parse(textBoxShots.Text)};
+
+                bulletInfo.Add(info);
+
+                delays.Add(float.Parse(textBoxDelay.Text));
+            }
         }
+
         public void DirectionTileClicked(object sender, EventArgs e)
         {
             if (sender is PictureBox)
             {
                 PictureBox tile = (PictureBox)sender;
 
-                int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
-                int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
+                for (int i = 0; i < directionGrid.GetLength(0); i++)
+                {
+                    for (int j = 0; j < directionGrid.GetLength(1); j++)
+                    {
+                        directionGrid[i, j].BackColor = Color.White;
+                    }
+                }
 
                 tile.BackColor = Color.Blue;
 
-                
+                float row = float.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
+                row = row - 2;
+
+                float col = float.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
+                col = col - 2;
+
+                float magnitude = (float)Math.Sqrt(Math.Pow(col, 2) + Math.Pow(row, 2));
+
+                row = row / magnitude;
+                col = col / magnitude;
+
+                currentDirection = new Vector2(col, row);
+            }
+        }
+
+        private void buttonAdd_Click()
+        {
+            bullets.Add(new Bullet(directions, positions, bulletInfo, delays));
+
+            directions.Clear();
+            positions.Clear();
+            bulletInfo.Clear();
+            delays.Clear();
+
+            for (int i = 0; i < directionGrid.GetLength(0); i++)
+            {
+                for (int j = 0; j < directionGrid.GetLength(1); j++)
+                {
+                    directionGrid[i, j].BackColor = Color.White;
+                }
+            }
+
+            for (int i = 0; i < positionGrid.GetLength(0); i++)
+            {
+                for (int j = 0; j < positionGrid.GetLength(1); j++)
+                {
+                    positionGrid[i, j].BackColor = Color.White;
+                }
+            }
+        }
+
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            buttonAdd_Click();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            buttonAdd_Click();
+
+            SaveFileDialog fileSaver = new SaveFileDialog();
+
+            fileSaver.Title = "Save a level file.";
+            fileSaver.Filter = "Level File|*.bullet";
+
+            DialogResult result = fileSaver.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                try
+                {
+                    StreamWriter output = new StreamWriter(fileSaver.FileName);
+
+                    output.WriteLine($"{bullets.Count}");
+
+                    for (int i = 0; i < bullets.Count; i++)
+                    {
+                        output.WriteLine($"{bullets[i].Count}");
+
+                        for (int j = 0; j < bullets[i].Count; j++)
+                        {
+                            output.Write(bullets[i].ToString());
+                        }
+                    }
+
+                    output.Close();
+
+                    // Alerts the user to successful save
+                    MessageBox.Show("File saved successfully.", "File saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
             }
         }
     }
