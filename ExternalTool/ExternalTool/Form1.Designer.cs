@@ -30,6 +30,7 @@
         {
             button1 = new Button();
             buttonWave = new Button();
+            buttonBullet = new Button();
             SuspendLayout();
             // 
             // button1
@@ -39,26 +40,38 @@
             button1.Name = "button1";
             button1.Size = new Size(341, 161);
             button1.TabIndex = 0;
-            button1.Text = "Create Enemy";
+            button1.Text = "Create Movement Pattern";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
             // buttonWave
             // 
             buttonWave.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonWave.Location = new Point(12, 12);
+            buttonWave.Location = new Point(12, 326);
             buttonWave.Name = "buttonWave";
-            buttonWave.Size = new Size(341, 141);
+            buttonWave.Size = new Size(341, 163);
             buttonWave.TabIndex = 1;
             buttonWave.Text = "Create Wave";
             buttonWave.UseVisualStyleBackColor = true;
             buttonWave.Click += buttonWave_Click;
             // 
+            // buttonBullet
+            // 
+            buttonBullet.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonBullet.Location = new Point(12, 12);
+            buttonBullet.Name = "buttonBullet";
+            buttonBullet.Size = new Size(341, 141);
+            buttonBullet.TabIndex = 3;
+            buttonBullet.Text = "Create Bullet";
+            buttonBullet.UseVisualStyleBackColor = true;
+            buttonBullet.Click += buttonBullet_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(365, 327);
+            ClientSize = new Size(365, 501);
+            Controls.Add(buttonBullet);
             Controls.Add(buttonWave);
             Controls.Add(button1);
             Name = "Form1";
@@ -70,5 +83,6 @@
 
         private Button button1;
         private Button buttonWave;
+        private Button buttonBullet;
     }
 }

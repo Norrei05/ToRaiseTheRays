@@ -25,6 +25,8 @@ namespace ExternalTool
 
         private List<Bullet> bullets;
 
+        private List<string> bulletNames;
+
         public BulletPattern()
         {
             InitializeComponent();
@@ -39,6 +41,32 @@ namespace ExternalTool
             delays = new List<float>();
 
             bullets = new List<Bullet>();
+
+            // Loads Pattern Names
+
+            bulletNames = new List<string>();
+
+            StreamReader input = null!;
+
+            try
+            {
+                input = new StreamReader("..\\..\\..\\BulletNames.txt");
+
+                string line = null!;
+                while ((line = input.ReadLine()!) != null)
+                {
+                    bulletNames.Add(line);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+            finally
+            {
+                if (input != null)
+                    input.Close();
+            }
         }
 
 
@@ -78,7 +106,7 @@ namespace ExternalTool
 
                     if (col == 2 && row == 2)
                     {
-                        positionGrid[col, row].BackColor = Color.Blue;
+                        positionGrid[col, row].BackColor = Color.Red;
                     }
 
                     groupBoxPosition.Controls.Add(positionGrid[col, row]);
@@ -107,7 +135,7 @@ namespace ExternalTool
 
                     if (col == 2 && row == 2)
                     {
-                        directionGrid[col, row].BackColor = Color.Blue;
+                        directionGrid[col, row].BackColor = Color.Red;
                     }
 
                     groupBoxDirection.Controls.Add(directionGrid[col, row]);
@@ -128,6 +156,8 @@ namespace ExternalTool
 
                 float col = float.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
                 col = col - 2;
+
+                tile.BackColor = Color.Blue;
 
                 directions.Add(currentDirection);
                 positions.Add(new Vector2(col * 5, row * 5));
@@ -156,6 +186,8 @@ namespace ExternalTool
                         directionGrid[i, j].BackColor = Color.White;
                     }
                 }
+
+                directionGrid[2, 2].BackColor = Color.Red;
 
                 tile.BackColor = Color.Blue;
 
@@ -191,6 +223,8 @@ namespace ExternalTool
                 }
             }
 
+            directionGrid[2, 2].BackColor = Color.Red;
+
             for (int i = 0; i < positionGrid.GetLength(0); i++)
             {
                 for (int j = 0; j < positionGrid.GetLength(1); j++)
@@ -198,6 +232,8 @@ namespace ExternalTool
                     positionGrid[i, j].BackColor = Color.White;
                 }
             }
+
+            positionGrid[2, 2].BackColor = Color.Red;
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -238,6 +274,20 @@ namespace ExternalTool
 
                     // Alerts the user to successful save
                     MessageBox.Show("File saved successfully.", "File saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Saves the existance of the new bullet pattern
+
+                    StreamWriter nameSaver = new StreamWriter("..\\..\\..\\BulletNames.txt");
+                    bulletNames.Add(fileSaver.FileName.Substring(fileSaver.FileName.LastIndexOf("\\") + 1, fileSaver.FileName.LastIndexOf(".") - fileSaver.FileName.LastIndexOf("\\") - 1));
+
+                    for (int i = 0; i < bulletNames.Count; i++)
+                    {
+                        nameSaver.WriteLine(bulletNames[i]);
+                    }
+
+                    nameSaver.Close();
+
+                    this.Close();
                 }
                 catch (Exception ex)
                 {

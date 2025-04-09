@@ -18,5 +18,11 @@ namespace ExternalTool
             WaveFormation instance = new WaveFormation();
             instance.ShowDialog();
         }
+
+        private void buttonBullet_Click(object sender, EventArgs e)
+        {
+            BulletPattern instance = new BulletPattern();
+            instance.ShowDialog();
+        }
     }
 }

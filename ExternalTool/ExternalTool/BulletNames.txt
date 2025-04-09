@@ -1,0 +1,3 @@
+AllDirections
+test
+test
