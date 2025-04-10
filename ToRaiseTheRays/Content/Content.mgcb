@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:Health_Bar.png
 
+#begin Horned-Snake.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Horned-Snake.png
+
 #begin Papyrus.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -80,7 +92,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Papyrus.spritefont
 
-#begin PlayerSprites/Barque_D.png
+#begin PlayerSpritesDay/Barque_D_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -90,9 +102,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_D.png
+/build:PlayerSpritesDay/Barque_D_Day.png
 
-#begin PlayerSprites/Barque_DL.png
+#begin PlayerSpritesDay/Barque_DL_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -102,9 +114,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_DL.png
+/build:PlayerSpritesDay/Barque_DL_Day.png
 
-#begin PlayerSprites/Barque_DR.png
+#begin PlayerSpritesDay/Barque_DR_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -114,9 +126,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_DR.png
+/build:PlayerSpritesDay/Barque_DR_Day.png
 
-#begin PlayerSprites/Barque_L.png
+#begin PlayerSpritesDay/Barque_L_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -126,9 +138,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_L.png
+/build:PlayerSpritesDay/Barque_L_Day.png
 
-#begin PlayerSprites/Barque_N.png
+#begin PlayerSpritesDay/Barque_N_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -138,9 +150,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_N.png
+/build:PlayerSpritesDay/Barque_N_Day.png
 
-#begin PlayerSprites/Barque_R.png
+#begin PlayerSpritesDay/Barque_R_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -150,9 +162,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_R.png
+/build:PlayerSpritesDay/Barque_R_Day.png
 
-#begin PlayerSprites/Barque_U.png
+#begin PlayerSpritesDay/Barque_U_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -162,9 +174,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_U.png
+/build:PlayerSpritesDay/Barque_U_Day.png
 
-#begin PlayerSprites/Barque_UL.png
+#begin PlayerSpritesDay/Barque_UL_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -174,9 +186,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_UL.png
+/build:PlayerSpritesDay/Barque_UL_Day.png
 
-#begin PlayerSprites/Barque_UR.png
+#begin PlayerSpritesDay/Barque_UR_Day.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -186,7 +198,115 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlayerSprites/Barque_UR.png
+/build:PlayerSpritesDay/Barque_UR_Day.png
+
+#begin PlayerSpritesNight/Barque_D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_D.png
+
+#begin PlayerSpritesNight/Barque_DL.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_DL.png
+
+#begin PlayerSpritesNight/Barque_DR.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_DR.png
+
+#begin PlayerSpritesNight/Barque_L.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_L.png
+
+#begin PlayerSpritesNight/Barque_N.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_N.png
+
+#begin PlayerSpritesNight/Barque_R.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_R.png
+
+#begin PlayerSpritesNight/Barque_U.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_U.png
+
+#begin PlayerSpritesNight/Barque_UL.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_UL.png
+
+#begin PlayerSpritesNight/Barque_UR.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayerSpritesNight/Barque_UR.png
 
 #begin Tiles_Day_1.png
 /importer:TextureImporter
@@ -235,4 +355,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Title_Night.png
+
+#begin Two-Headed-Snake.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Two-Headed-Snake.png
+
+#begin Winged-Snake.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Winged-Snake.png
 

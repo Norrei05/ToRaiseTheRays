@@ -40,6 +40,9 @@ public class Game1 : Game
     private Texture2D nightTileset;
     private Rectangle[,] map;
 
+    private Texture2D startScreen;
+    private Texture2D endScreen;
+
     private float animationSpeedFPS;
     private float secondsPerFrame;
     private float timeCounter;
@@ -116,7 +119,7 @@ public class Game1 : Game
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
         {
-            playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSprites/Barque_{direction}");
+            playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSpritesNight/Barque_{direction}");
         }
 
         // Load in fog of war asset
@@ -126,6 +129,10 @@ public class Game1 : Game
         dayTileset = Content.Load<Texture2D>("Tiles_Day_1");
         nightTileset = Content.Load<Texture2D>("Tiles_Night_1");
         CreateMap();
+
+        // Load in both start and end screen textures
+        startScreen = Content.Load<Texture2D>("Title_Day");
+        endScreen = Content.Load<Texture2D>("Title_Night");
 
         // Create player of size 44x44 at the bottom of the screen
         Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 100, 100);
@@ -311,11 +318,18 @@ public class Game1 : Game
         {
             case GameState.Start:
 
-                DrawMap(SpriteBatch, gameTime);
+                SpriteBatch.Draw(startScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.AntiqueWhite);
+
+                // Display information about controls to player
+                SpriteBatch.DrawString(PapyrusFont, " TO RAISE\nTHE RAYS", new Vector2(ScreenBounds.Width / 2 - 98, 127), Color.Black);
+                SpriteBatch.DrawString(PapyrusFont, " TO RAISE\nTHE RAYS", new Vector2(ScreenBounds.Width / 2 - 100, 125), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 273), Color.Black);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 275), Color.OrangeRed);
+
                 break;
             case GameState.Night:
 
-                DrawMap(SpriteBatch, gameTime);
+                DrawMap(SpriteBatch, gameTime, true);
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -328,7 +342,7 @@ public class Game1 : Game
                 break;
             case GameState.Day:
 
-                DrawMap(SpriteBatch, gameTime);
+                DrawMap(SpriteBatch, gameTime, false);
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -341,7 +355,14 @@ public class Game1 : Game
                 break;
             case GameState.End:
 
-                DrawMap(SpriteBatch, gameTime);
+                SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.White);
+
+                // Display information about controls to player
+                SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 128, 127), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 130, 125), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER TO\n     START OVER", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 273), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER TO\n     START OVER", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 275), Color.OrangeRed);
+
                 break;
         }
 
@@ -415,9 +436,31 @@ public class Game1 : Game
         }
     }
 
-    private void DrawMap(SpriteBatch sb, GameTime gameTime)
+    /// <summary>
+    /// Helper method to draw the map based on if it is night or not using the provided SpriteBatch.
+    /// Notice: This method assumes that Begin() and End() are already taken care of.
+    /// </summary>
+    /// <param name="sb">Sprite batch being used to draw</param>
+    /// <param name="gameTime">Current game time and scalar for auto scrolling map</param>
+    /// <param name="isNight">Whether or not the game state is night</param>
+    private void DrawMap(SpriteBatch sb, GameTime gameTime, bool isNight)
     {
         timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        Texture2D tileset;
+        Color color;
+
+        // Adjusts the tileset and color overlay based on whether or not it is night
+        if (isNight)
+        {
+            tileset = nightTileset;
+            color = Color.LightSlateGray;
+        }
+        else
+        {
+            tileset = dayTileset;
+            color = Color.AntiqueWhite;
+        }
 
         // Loops through every tile in map, displaying to screen and moving based on how long the game's been running
         for (int col = map.GetLength(0) - 1; col >= 0; col--)
@@ -426,7 +469,7 @@ public class Game1 : Game
             {
                 // Normal map that scrolls based on time
                 position = new Vector2((col * 16), 0 - row * 16 + (timeCounter * 400));
-                sb.Draw(nightTileset, position, map[col, row], Color.LightSlateGray);
+                sb.Draw(tileset, position, map[col, row], color);
 
                 // Other tiles that fill in wherever the normal map does not cover
                 if (position.Y >= 0)
@@ -434,7 +477,7 @@ public class Game1 : Game
                 else
                     newPosition = new Vector2(position.X, position.Y + ScreenBounds.Height);
 
-                sb.Draw(nightTileset, newPosition, map[col, row], Color.LightSlateGray);
+                sb.Draw(tileset, newPosition, map[col, row], color);
             }
         }
 
