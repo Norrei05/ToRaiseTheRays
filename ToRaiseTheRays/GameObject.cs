@@ -11,6 +11,8 @@ public abstract class GameObject {
     protected Vector2 velocity;
     public Alignment Alignment { get; protected set; }
 
+    public Vector2 Velocity => velocity;
+
     public GameObject(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment) {
         this.texture = texture;
         this.position = position;

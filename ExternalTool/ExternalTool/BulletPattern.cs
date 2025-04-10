@@ -21,6 +21,8 @@ namespace ExternalTool
         private List<Vector2> directions;
         private List<Vector2> positions;
         private List<int[]> bulletInfo;
+
+        private List<int> shots;
         private List<float> delays;
 
         private List<Bullet> bullets;
@@ -38,6 +40,8 @@ namespace ExternalTool
             directions = new List<Vector2>();
             positions = new List<Vector2>();
             bulletInfo = new List<int[]>();
+
+            shots = new List<int>();
             delays = new List<float>();
 
             bullets = new List<Bullet>();
@@ -164,12 +168,9 @@ namespace ExternalTool
 
                 int[] info = { int.Parse(textBoxDamage.Text),
                     int.Parse(textBoxSpeed.Text),
-                    int.Parse(textBoxSize.Text),
-                    int.Parse(textBoxShots.Text)};
+                    int.Parse(textBoxSize.Text)};
 
                 bulletInfo.Add(info);
-
-                delays.Add(float.Parse(textBoxDelay.Text));
             }
         }
 
@@ -208,12 +209,11 @@ namespace ExternalTool
 
         private void buttonAdd_Click()
         {
-            bullets.Add(new Bullet(directions, positions, bulletInfo, delays));
+            bullets.Add(new Bullet(directions, positions, bulletInfo));
 
             directions.Clear();
             positions.Clear();
             bulletInfo.Clear();
-            delays.Clear();
 
             for (int i = 0; i < directionGrid.GetLength(0); i++)
             {
@@ -234,6 +234,9 @@ namespace ExternalTool
             }
 
             positionGrid[2, 2].BackColor = Color.Red;
+
+            delays.Add(float.Parse(textBoxDelay.Text));
+            shots.Add(int.Parse(textBoxShots.Text));
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -264,10 +267,10 @@ namespace ExternalTool
                     {
                         output.WriteLine($"{bullets[i].Count}");
 
-                        for (int j = 0; j < bullets[i].Count; j++)
-                        {
-                            output.Write(bullets[i].ToString());
-                        }
+                        output.Write($"{bullets[i].ToString()}");
+
+                        output.WriteLine($"{shots[i]}");
+                        output.WriteLine($"{delays[i]}");
                     }
 
                     output.Close();

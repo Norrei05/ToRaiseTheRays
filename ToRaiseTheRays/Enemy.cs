@@ -18,6 +18,8 @@ public class Enemy : GameObject {
 
     private double timer;
 
+    // Movement
+
     private Vector2 spawnTarget;
     private double spawnDuration;
 
@@ -27,10 +29,22 @@ public class Enemy : GameObject {
     private Vector2 lastPosition;
     private Vector2 target;
 
+    // Bullets
+
+    private List<List<Bullet>> bulletPattern;
+    private Texture2D bulletTexture;
+
+    private List<int> shots;
+    private List<float> delays;
+
+    private int patternCount;
+    private int shotCount;
+    private double shotTimer;
+
     // Constructors
 
-    public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string filename,
-        int health, int shotDamage, int collisionDamage) 
+    public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string patternName, string bulletName,
+        int health, int shotDamage, int collisionDamage, Texture2D bulletTexture) 
         : base(texture, position, velocity, alignment)
     {
         Health = health;
@@ -60,8 +74,22 @@ public class Enemy : GameObject {
 
         movements = new List<Vector2>();
 
-        ReadMovements(filename);
+        ReadMovements(patternName);
         patternIndex = 0;
+
+        // Loads enemy bullet pattern from file
+
+        bulletPattern = new List<List<Bullet>>();
+        this.bulletTexture = bulletTexture;
+
+        shots = new List<int>();
+        delays = new List<float>();
+
+        ReadBullets(bulletName);
+
+        patternCount = 0;
+        shotCount = 0;
+        shotTimer = 0;
 
         // Sets information for enemy movement
 
@@ -132,6 +160,32 @@ public class Enemy : GameObject {
 
                 timer = 0;
             }
+
+            // Shooting 
+
+            if (bulletPattern != null)
+            {
+                shotTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (shotTimer > delays[patternCount])
+                {
+                    Shoot(bulletPattern[patternCount]);
+
+                    shotTimer = 0;
+                    shotCount++;
+
+                    if (shotCount >= shots[patternCount])
+                    {
+                        shotCount = 0;
+                        patternCount++;
+
+                        if (patternCount >= bulletPattern.Count)
+                        {
+                            patternCount = 0;
+                        }
+                    }
+                }
+            }
         }
 
     }
@@ -161,6 +215,27 @@ public class Enemy : GameObject {
     public virtual void TakeDamage(int damage) => Health -= damage;
 
     /// <summary>
+    /// Shoots list of bullets
+    /// </summary>
+    /// <param name="ammo"></param>
+    public void Shoot(List<Bullet> ammo)
+    {
+        for (int i = 0; i < ammo.Count; i++)
+        {
+            Game1.ActiveEntities.Add(new Bullet(bulletTexture, 
+                                    new Rectangle(this.position.X + this.position.Width / 2 + ammo[i].position.X, 
+                                    this.position.Y + this.position.Height + ammo[i].position.Y, 
+                                    ammo[i].position.Width, ammo[i].position.Height),
+                                    new Vector2(ammo[i].Velocity.X, ammo[i].Velocity.Y),
+                                    ammo[i].Damage, this, this.Alignment));
+        }
+    }
+
+
+    // File Inputs
+
+
+    /// <summary>
     /// Loads the enemies movement pattern from an external file
     /// </summary>
     /// <param name="filename">indicator for the external file being read</param>
@@ -182,6 +257,74 @@ public class Enemy : GameObject {
                 int moveY = int.Parse(move.Substring(move.IndexOf(",") + 1));
 
                 movements.Add(new Vector2(moveX, moveY));
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error: " + e.Message);
+        }
+        finally
+        {
+            if (input != null)
+                input.Close();
+        }
+    }
+
+    public void ReadBullets(string filename)
+    {
+        StreamReader input = null!;
+
+        try
+        {
+            input = new StreamReader("..\\..\\..\\" + filename + ".bullet");
+
+            int numSteps = int.Parse(input.ReadLine());
+
+            for (int i = 0; i < numSteps; i++)
+            {
+                bulletPattern.Add(new List<Bullet>());
+
+                int numBullets = int.Parse(input.ReadLine());
+
+                for (int j = 0; j < numBullets; j++)
+                {
+                    // Direction
+
+                    string direction = input.ReadLine();
+
+                    float directionX = float.Parse(direction.Substring(0, direction.IndexOf(",")));
+                    float directionY = float.Parse(direction.Substring(direction.IndexOf(",") + 1));
+
+                    // Relative Position
+
+                    string position = input.ReadLine();
+
+                    int positionX = int.Parse(position.Substring(0, position.IndexOf(",")));
+                    int positionY = int.Parse(position.Substring(position.IndexOf(",") + 1));
+
+                    // Other Info
+
+                    string[] bulletText = input.ReadLine().Split(",");
+                    int[] bulletStats = new int[bulletText.Length];
+
+                    for (int k = 0; k < bulletStats.Length; k++)
+                    {
+                        bulletStats[k] = int.Parse(bulletText[k]);
+                    }
+
+                    // Adding Bullet
+
+                    bulletPattern[i].Add(new Bullet(bulletTexture, new Rectangle(positionX, positionY, bulletStats[2], bulletStats[2]),
+                                                    new Vector2(directionX * bulletStats[1], directionY * bulletStats[1]), bulletStats[0], this, this.Alignment));
+                }
+
+                // Pattern
+
+                int shot = int.Parse(input.ReadLine());
+                float delay = float.Parse(input.ReadLine());
+
+                shots.Add(shot);
+                delays.Add(delay);
             }
         }
         catch (Exception e)

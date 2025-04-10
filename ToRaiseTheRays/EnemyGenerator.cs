@@ -18,9 +18,10 @@ namespace ToRaiseTheRays
         private int curWave;
 
         private Texture2D enemyTexture;
-        private int dimensions; 
+        private Texture2D bulletTexture;
+        private int dimensions;
 
-        public EnemyGenerator(List<string> waves, int spawnTime, Texture2D enemyTexture, int dimensions)
+        public EnemyGenerator(List<string> waves, int spawnTime, Texture2D enemyTexture, Texture2D bulletTexture, int dimensions)
         {
             this.waves = waves;
             this.spawnTime = spawnTime;
@@ -28,6 +29,7 @@ namespace ToRaiseTheRays
             curWave = 0;
 
             this.enemyTexture = enemyTexture;
+            this.bulletTexture = bulletTexture;
             this.dimensions = dimensions;
         }
 
@@ -47,7 +49,8 @@ namespace ToRaiseTheRays
 
                     for (int i = 0; i < numEnemies; i++)
                     {
-                        string filename = input.ReadLine();
+                        string patternName = input.ReadLine();
+                        string bulletName = input.ReadLine();
 
                         string pos = input.ReadLine();
 
@@ -63,7 +66,7 @@ namespace ToRaiseTheRays
                             enemyStats[j] = int.Parse(enemyStatsText[j]);
                         }
 
-                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, filename, enemyStats[0], enemyStats[2], enemyStats[3]));
+                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
                     }
                 }
                 catch (Exception e)
@@ -85,5 +88,50 @@ namespace ToRaiseTheRays
                 }
             }
         }
+
+        /*
+        private void GenerateWave(string filename)
+        {
+            StreamReader input = null!;
+
+            try
+            {
+                input = new StreamReader("..\\..\\..\\" + filename);
+
+                int numEnemies = int.Parse(input.ReadLine());
+
+                for (int i = 0; i < numEnemies; i++)
+                {
+                    string patternName = input.ReadLine();
+                    string bulletName = input.ReadLine();
+
+                    string pos = input.ReadLine();
+
+                    int posX = int.Parse(pos.Substring(0, pos.IndexOf(",")));
+                    int posY = int.Parse(pos.Substring(pos.IndexOf(",") + 1));
+
+                    string[] enemyStatsText = input.ReadLine().Split(",");
+                    int[] enemyStats = new int[enemyStatsText.Length];
+
+                    // Index 0 is health, 1 is speed, 2 is shot damage, 3 is collision damage, 4 is width, 5 is height
+                    for (int j = 0; j < enemyStats.Length; j++)
+                    {
+                        enemyStats[j] = int.Parse(enemyStatsText[j]);
+                    }
+
+                    Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patterName, enemyStats[0], enemyStats[2], enemyStats[3]));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+            finally
+            {
+                if (input != null)
+                    input.Close();
+            }
+        }
+        */
     }
 }

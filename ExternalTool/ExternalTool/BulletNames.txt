@@ -2,3 +2,7 @@ AllDirections
 test
 test
 test
+BulletTest
+BulletTest
+BulletTest
+StraightDown

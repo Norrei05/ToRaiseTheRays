@@ -15,7 +15,6 @@ namespace ExternalTool
         private List<Vector2> directions;
         private List<Vector2> positions;
         private List<int[]> bulletInfo;
-        private List<float> delays;
 
         // Properties
 
@@ -29,7 +28,7 @@ namespace ExternalTool
 
         // Constructor
 
-        public Bullet(List<Vector2> directions, List<Vector2> positions, List<int[]> bulletInfo, List<float> delays)
+        public Bullet(List<Vector2> directions, List<Vector2> positions, List<int[]> bulletInfo)
         {
             this.directions = new List<Vector2>();
             foreach (Vector2 v in directions)
@@ -47,12 +46,6 @@ namespace ExternalTool
             foreach (int[] i in bulletInfo)
             {
                 this.bulletInfo.Add(i);
-            }
-
-            this.delays = new List<float>();
-            foreach (float f in delays)
-            {
-                this.delays.Add(f);
             }
         }
 
@@ -75,8 +68,6 @@ namespace ExternalTool
                 }
 
                 output += "\n";
-
-                output += $"{delays[i]}\n";
             }
 
             return output;

@@ -117,11 +117,9 @@ public class Game1 : Game
         healthBar = Content.Load<Texture2D>("Health_Bar");
 
         List<string> files = new List<string>();
-        //files.Add("ChangesTest.wave");
-        files.Add("Forward.wave");
-        files.Add("Fast.wave");
+        files.Add("ShotTest.wave");
 
-        generator = new EnemyGenerator(files, 10, enemyTexture, 44);
+        generator = new EnemyGenerator(files, 10, enemyTexture, BulletTexture, 44);
     }
 
     /// <summary>
@@ -133,19 +131,20 @@ public class Game1 : Game
 
         player.Shoot();
 
+
         generator.Update(gameTime);
 
         // Do all movement before checking collision.
-        foreach (GameObject entity in ActiveEntities)
+        for (int i = 0; i < ActiveEntities.Count; i++)
         {
-            if (entity is Enemy)
+            if (ActiveEntities[i] is Enemy)
             {
-                Enemy enemy = (Enemy)entity;
+                Enemy enemy = (Enemy)ActiveEntities[i];
                 enemy.Move(gameTime);
             }
             else
             {
-                entity.Move();
+                ActiveEntities[i].Move();
             }
         }
 
