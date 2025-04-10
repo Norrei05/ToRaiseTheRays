@@ -28,6 +28,8 @@ public class Game1 : Game
     public static Texture2D BulletTexture { get; private set; }
     private Texture2D enemyTexture;
 
+    private Texture2D wingedBoss;
+
     // private Texture2D fogTexture;
 
     //private string gameState;
@@ -115,6 +117,7 @@ public class Game1 : Game
         BulletTexture = Content.Load<Texture2D>("Bullet2");
 
         enemyTexture = Content.Load<Texture2D>("basic_enemy_1");
+        wingedBoss = Content.Load<Texture2D>("Winged-Snake");
 
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
@@ -151,7 +154,7 @@ public class Game1 : Game
         generator.AddNormal("BasicWave");
         generator.AddNormal("BasicWave");
 
-        generator.AddBoss("winged");
+        generator.AddBoss("winged", wingedBoss);
     }
 
     /// <summary>
