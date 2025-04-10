@@ -1,13 +1,4 @@
-AllDirections
-test
-test
-test
-BulletTest
-BulletTest
-BulletTest
-StraightDown
-TwoStep
 StraightDown
 None
 AllDirections
-AllDirections
+

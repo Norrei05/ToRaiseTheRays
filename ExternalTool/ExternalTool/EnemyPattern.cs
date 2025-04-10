@@ -121,10 +121,17 @@ namespace ExternalTool
                 int row = int.Parse(tile.Name.Substring(0, tile.Name.IndexOf(",")));
                 int col = int.Parse(tile.Name.Substring(tile.Name.IndexOf(",") + 1));
 
+                foreach (PictureBox t in grid)
+                {
+                    t.BackColor = Color.White;
+                }
+
                 for (int i = 0; i < gridTiles.Count; i++)
                 {
+                    /*
                     if (gridTiles[i].X < 41 && gridTiles[i].X >= 0 && gridTiles[i].Y < 41 && gridTiles[i].Y >= 0)
                         grid[gridTiles[i].X, gridTiles[i].Y].BackColor = Color.White;
+                    */
 
                     gridTiles[i] = new Point(gridTiles[i].X + (20 - col),
                         gridTiles[i].Y + (20 - row));

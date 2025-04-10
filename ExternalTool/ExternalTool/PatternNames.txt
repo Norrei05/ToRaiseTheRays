@@ -1,9 +1,4 @@
-Triangle
-Rectangle
-Delayed
-Test
-SideToSide
 GoDown
 MoveAllAround
 SideToSide
-SideToSide
+Test
