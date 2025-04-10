@@ -2,3 +2,6 @@ Triangle
 Rectangle
 Delayed
 Test
+SideToSide
+GoDown
+MoveAllAround

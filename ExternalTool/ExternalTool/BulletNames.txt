@@ -6,3 +6,7 @@ BulletTest
 BulletTest
 BulletTest
 StraightDown
+TwoStep
+StraightDown
+None
+AllDirections

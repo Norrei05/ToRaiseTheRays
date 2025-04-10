@@ -11,85 +11,150 @@ namespace ToRaiseTheRays
 {
     internal class EnemyGenerator
     {
-        private List<string> waves;
-        private int spawnTime;
+        // Fields
+
+        private List<string> normalEnemies;
+        private List<string> fastEnemies;
+        private List<string> bosses;
+
+        private int normalWait;
         private double timer;
 
-        private int curWave;
+        private int fastWait;
+        private double fastTimer;
+
+        private int normalWavesCount;
+        private int currentWave;
+
+        private int fastTypesCount;
 
         private Texture2D enemyTexture;
         private Texture2D bulletTexture;
-        private int dimensions;
 
-        public EnemyGenerator(List<string> waves, int spawnTime, Texture2D enemyTexture, Texture2D bulletTexture, int dimensions)
+        private bool inPlay;
+
+        Random rng;
+
+        // Properties
+
+        public bool InPlay => inPlay;
+
+        // Constructor
+
+        public EnemyGenerator(int normalWait, int fastWait, Texture2D enemyTexture, Texture2D bulletTexture)
         {
-            this.waves = waves;
-            this.spawnTime = spawnTime;
-            timer = spawnTime / 2;
-            curWave = 0;
+            normalEnemies = new List<string>();
+            fastEnemies = new List<string>();
+            bosses = new List<string>();
+            
+            this.normalWait = normalWait;
+            this.fastWait = fastWait;
+
+            timer = 0;
+            fastTimer = 0;
+
+            normalWavesCount = 3;
+            currentWave = 0;
+
+            fastTypesCount = 0;
 
             this.enemyTexture = enemyTexture;
             this.bulletTexture = bulletTexture;
-            this.dimensions = dimensions;
+
+            inPlay = false;
+
+            rng = new Random();
         }
 
         public void Update(GameTime gameTime)
         {
-            timer += gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (timer >= spawnTime)
+            if (inPlay)
             {
-                StreamReader input = null!;
+                timer += gameTime.ElapsedGameTime.TotalSeconds;
+                fastTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
-                try
+                if (timer >= normalWait)
                 {
-                    input = new StreamReader("..\\..\\..\\"  + waves[curWave]);
 
-                    int numEnemies = int.Parse(input.ReadLine());
-
-                    for (int i = 0; i < numEnemies; i++)
+                    if (currentWave < normalWavesCount)
                     {
-                        string patternName = input.ReadLine();
-                        string bulletName = input.ReadLine();
-
-                        string pos = input.ReadLine();
-
-                        int posX = int.Parse(pos.Substring(0, pos.IndexOf(",")));
-                        int posY = int.Parse(pos.Substring(pos.IndexOf(",") + 1));
-
-                        string[] enemyStatsText = input.ReadLine().Split(",");
-                        int[] enemyStats = new int[enemyStatsText.Length];
-
-                        // Index 0 is health, 1 is speed, 2 is shot damage, 3 is collision damage, 4 is width, 5 is height
-                        for (int j = 0; j < enemyStats.Length; j++)
-                        {
-                            enemyStats[j] = int.Parse(enemyStatsText[j]);
-                        }
-
-                        Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
+                        currentWave++;
+                        GenerateWave(normalEnemies[rng.Next(normalEnemies.Count)]);
                     }
-                }
-                catch (Exception e)
-                {
-                      Console.WriteLine("Error: " + e.Message);
-                }
-                finally
-                {
-                    if (input != null)
-                        input.Close();
+                    else if (currentWave == normalWavesCount)
+                    {
+                        GenerateWave(bosses[rng.Next(bosses.Count)]);
+                    }
+
+                    timer = 0;
                 }
 
-                timer = 0;
-                curWave++;
-
-                if (curWave >= waves.Count)
+                if (fastTimer >= fastWait)
                 {
-                    curWave = 0;
+                    GenerateWave(fastEnemies[rng.Next(fastTypesCount)]);
+
+                    fastTimer = 0;
+                }
+
+                if (currentWave == normalWavesCount)
+                {
+                    bool defeatedBoss = true;
+
+                    for (int i = 0; i < Game1.ActiveEntities.Count; i++)
+                    {
+                        if (Game1.ActiveEntities[i] is Enemy)
+                        {
+                            defeatedBoss = false;
+                        }
+                    }
+
+                    if (defeatedBoss)
+                    {
+                        inPlay = false;
+                    }
                 }
             }
         }
 
-        /*
+        public void Start()
+        {
+            inPlay = true;
+        }
+
+        public void NextLevel()
+        {
+            inPlay = true;
+
+            normalWavesCount += 2;
+            currentWave = 0;
+            
+            if (fastTypesCount < fastEnemies.Count)
+            {
+                fastTypesCount++;
+            }
+        }
+
+        public void Reset()
+        {
+            normalWavesCount = 3;
+            fastTypesCount = 1;
+        }
+
+        public void AddNormal(string filename)
+        {
+            normalEnemies.Add(filename + ".wave");
+        }
+
+        public void AddFast(string filename)
+        {
+            fastEnemies.Add(filename + ".wave");
+        }
+
+        public void AddBoss(string filename)
+        {
+            bosses.Add(filename + ".wave");
+        }
+
         private void GenerateWave(string filename)
         {
             StreamReader input = null!;
@@ -119,7 +184,7 @@ namespace ToRaiseTheRays
                         enemyStats[j] = int.Parse(enemyStatsText[j]);
                     }
 
-                    Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patterName, enemyStats[0], enemyStats[2], enemyStats[3]));
+                    Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
                 }
             }
             catch (Exception e)
@@ -132,6 +197,6 @@ namespace ToRaiseTheRays
                     input.Close();
             }
         }
-        */
+        
     }
 }

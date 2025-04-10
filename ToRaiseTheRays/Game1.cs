@@ -6,6 +6,15 @@ using System.Collections.Generic;
 
 namespace ToRaiseTheRays;
 
+enum GameState
+{
+    Start,
+    Day,
+    Night,
+    Pause,
+    End
+}
+
 public class Game1 : Game
 {
     // Fields/Properties
@@ -21,7 +30,8 @@ public class Game1 : Game
 
     // private Texture2D fogTexture;
 
-    private string gameState;
+    //private string gameState;
+    private GameState gameState;
 
     private Player player;
     private EnemyGenerator generator;
@@ -39,6 +49,9 @@ public class Game1 : Game
     private Vector2 newPosition;
 
     private Texture2D healthBar;
+
+    private int dayTime;
+    private double dayTimer;
 
     public static List<GameObject> ActiveEntities { get; private set; }
 
@@ -77,8 +90,13 @@ public class Game1 : Game
         timeCounter = 0;
         secondTimeCounter = 0;
 
+        dayTime = 3;
+        dayTimer = 0;
+
         position = new Vector2(0, map[0, 0].Y);
         newPosition = new Vector2(1, 1);
+
+        gameState = GameState.Start;
 
         base.Initialize();
     }
@@ -116,10 +134,17 @@ public class Game1 : Game
 
         healthBar = Content.Load<Texture2D>("Health_Bar");
 
-        List<string> files = new List<string>();
-        files.Add("ShotTest.wave");
+        generator = new EnemyGenerator(10, 5, enemyTexture, BulletTexture);
 
-        generator = new EnemyGenerator(files, 10, enemyTexture, BulletTexture, 44);
+        generator.AddFast("Advance");
+        generator.AddFast("Advance");
+        generator.AddFast("Advance");
+
+        generator.AddNormal("BasicWave");
+        generator.AddNormal("BasicWave");
+        generator.AddNormal("BasicWave");
+
+        generator.AddBoss("winged");
     }
 
     /// <summary>
@@ -129,46 +154,145 @@ public class Game1 : Game
         // Don't ask me why this line is so long. It's the default exit line.
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-        player.Shoot();
+        KeyboardState kb = Keyboard.GetState();
 
-
-        generator.Update(gameTime);
-
-        // Do all movement before checking collision.
-        for (int i = 0; i < ActiveEntities.Count; i++)
+        switch (gameState)
         {
-            if (ActiveEntities[i] is Enemy)
-            {
-                Enemy enemy = (Enemy)ActiveEntities[i];
-                enemy.Move(gameTime);
-            }
-            else
-            {
-                ActiveEntities[i].Move();
-            }
-        }
+            case GameState.Start:
+                if (kb.IsKeyDown(Keys.Space))
+                {
+                    gameState = GameState.Day;
+                    generator.Start();
+                }
 
-        foreach (GameObject entity in ActiveEntities)
-        {
-            // Collision checking is one-sided per GameObject, so this doesn't double-check.
-            // Self-checking is fine, since the alignment of an object will always match itself.
-            foreach (GameObject other in ActiveEntities) entity.CheckCollision(other);
-        }
+                break;
+            case GameState.Day:
 
-        // Remove dead entities
-        for (int i = ActiveEntities.Count - 1; i >= 0; i--)
-        {
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
-            PapyrusFont = Content.Load<SpriteFont>("Papyrus");
-            // Starting gamestate is the title screen
-            gameState = "title";
-            if ((ActiveEntities[i] is Bullet bullet && !bullet.Alive) ||
-                (ActiveEntities[i] is Enemy enemy && enemy.Health <= 0) ||
-                (ActiveEntities[i] is Player player && player.Health <= 0))
-            {
-                 ActiveEntities.RemoveAt(i);
-            }
+                player.Shoot();
+
+                // Do all movement before checking collision.
+                for (int i = 0; i < ActiveEntities.Count; i++)
+                {
+                    if (ActiveEntities[i] is Enemy)
+                    {
+                        Enemy enemy = (Enemy)ActiveEntities[i];
+                        enemy.Move(gameTime);
+                    }
+                    else
+                    {
+                        ActiveEntities[i].Move();
+                    }
+                }
+
+                foreach (GameObject entity in ActiveEntities)
+                {
+                    // Collision checking is one-sided per GameObject, so this doesn't double-check.
+                    // Self-checking is fine, since the alignment of an object will always match itself.
+                    foreach (GameObject other in ActiveEntities) entity.CheckCollision(other);
+                }
+
+                // Remove dead entities
+                for (int i = ActiveEntities.Count - 1; i >= 0; i--)
+                {
+                    SpriteBatch = new SpriteBatch(GraphicsDevice);
+                    PapyrusFont = Content.Load<SpriteFont>("Papyrus");
+                    // Starting gamestate is the title screen
+                    //gameState = "title";
+                    if ((ActiveEntities[i] is Bullet bullet && !bullet.Alive) ||
+                        (ActiveEntities[i] is Enemy enemy && enemy.Health <= 0))
+                    {
+                        ActiveEntities.RemoveAt(i);
+                    }
+                }
+
+                dayTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (dayTimer >= dayTime)
+                {
+                    generator.NextLevel();
+                    dayTimer = 0;
+
+                    gameState = GameState.Night;
+                }
+
+                break;
+            case GameState.Night:
+
+                player.Shoot();
+
+                generator.Update(gameTime);
+
+                // Do all movement before checking collision.
+                for (int i = 0; i < ActiveEntities.Count; i++)
+                {
+                    if (ActiveEntities[i] is Enemy)
+                    {
+                        Enemy enemy = (Enemy)ActiveEntities[i];
+                        enemy.Move(gameTime);
+                    }
+                    else
+                    {
+                        ActiveEntities[i].Move();
+                    }
+                }
+
+                foreach (GameObject entity in ActiveEntities)
+                {
+                    // Collision checking is one-sided per GameObject, so this doesn't double-check.
+                    // Self-checking is fine, since the alignment of an object will always match itself.
+                    foreach (GameObject other in ActiveEntities) entity.CheckCollision(other);
+                }
+
+                // Remove dead entities
+                for (int i = ActiveEntities.Count - 1; i >= 0; i--)
+                {
+                    SpriteBatch = new SpriteBatch(GraphicsDevice);
+                    PapyrusFont = Content.Load<SpriteFont>("Papyrus");
+                    // Starting gamestate is the title screen
+                    //gameState = "title";
+                    if ((ActiveEntities[i] is Bullet bullet && !bullet.Alive) ||
+                        (ActiveEntities[i] is Enemy enemy && enemy.Health <= 0))
+                    {
+                        ActiveEntities.RemoveAt(i);
+                    }
+                }
+
+                if (player.Health <= 0)
+                {
+                    gameState = GameState.End;
+
+                    for (int i = ActiveEntities.Count - 1; i >= 0; i--)
+                    {
+                        SpriteBatch = new SpriteBatch(GraphicsDevice);
+                        PapyrusFont = Content.Load<SpriteFont>("Papyrus");
+                        // Starting gamestate is the title screen
+                        //gameState = "title";
+                        if ((ActiveEntities[i] is Bullet bullet) ||
+                            (ActiveEntities[i] is Enemy enemy))
+                        {
+                            ActiveEntities.RemoveAt(i);
+                        }
+                    }
+                }
+                else if (!generator.InPlay)
+                {
+                    gameState = GameState.Day;
+                }
+
+                break;
+            case GameState.End:
+                if (kb.IsKeyDown(Keys.Enter))
+                {
+                    gameState = GameState.Start;
+                    player.Reset();
+                    generator.Reset();
+                }
+
+                break;
         }
+       
+
+        
 
         base.Update(gameTime);
     }
@@ -179,42 +303,48 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime) {        
         GraphicsDevice.Clear(Color.Sienna);
         
-        setState(gameState);
+        //setState(gameState);
 
         SpriteBatch.Begin();
 
-        timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-        // Loops through every tile in map, displaying to screen and moving based on how long the game's been running
-        for (int col = map.GetLength(0) - 1; col >= 0; col--)
+        switch (gameState)
         {
-            for (int row = map.GetLength(1) - 1; row >= 0; row--)
-            {
-                // Normal map that scrolls based on time
-                position = new Vector2((col * 16), 0 - row * 16 + (timeCounter * 400));
-                SpriteBatch.Draw(nightTileset, position, map[col, row], Color.LightSlateGray);
+            case GameState.Start:
 
-                // Other tiles that fill in wherever the normal map does not cover
-                if (position.Y >= 0)
-                    newPosition = new Vector2(position.X, position.Y - ScreenBounds.Height);
-                else
-                    newPosition = new Vector2(position.X, position.Y + ScreenBounds.Height);
+                DrawMap(SpriteBatch, gameTime);
+                break;
+            case GameState.Night:
 
-                SpriteBatch.Draw(nightTileset, newPosition, map[col, row], Color.LightSlateGray);
-            }
+                DrawMap(SpriteBatch, gameTime);
+
+                // Draws health bar to screen, updating based on the current player health
+                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
+
+                if (player.Health > 0)
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(31, ScreenBounds.Height - 55), Color.OrangeRed);
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw();
+
+                break;
+            case GameState.Day:
+
+                DrawMap(SpriteBatch, gameTime);
+
+                // Draws health bar to screen, updating based on the current player health
+                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
+
+                if (player.Health > 0)
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(31, ScreenBounds.Height - 55), Color.OrangeRed);
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw();
+
+                break;
+            case GameState.End:
+
+                DrawMap(SpriteBatch, gameTime);
+                break;
         }
 
-        // Resets the timer whenever the map gets too low to prevent too large calculations
-        if (position.Y >= ScreenBounds.Height)
-            timeCounter = 0;
-
-        // Draws health bar to screen, updating based on the current player health
-        SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
-
-        if (player.Health > 0)
-            SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(31, ScreenBounds.Height - 55), Color.OrangeRed);
-
-        foreach (GameObject entity in ActiveEntities) entity.Draw();
 
         SpriteBatch.End();
     
@@ -284,6 +414,36 @@ public class Game1 : Game
             }
         }
     }
+
+    private void DrawMap(SpriteBatch sb, GameTime gameTime)
+    {
+        timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        // Loops through every tile in map, displaying to screen and moving based on how long the game's been running
+        for (int col = map.GetLength(0) - 1; col >= 0; col--)
+        {
+            for (int row = map.GetLength(1) - 1; row >= 0; row--)
+            {
+                // Normal map that scrolls based on time
+                position = new Vector2((col * 16), 0 - row * 16 + (timeCounter * 400));
+                sb.Draw(nightTileset, position, map[col, row], Color.LightSlateGray);
+
+                // Other tiles that fill in wherever the normal map does not cover
+                if (position.Y >= 0)
+                    newPosition = new Vector2(position.X, position.Y - ScreenBounds.Height);
+                else
+                    newPosition = new Vector2(position.X, position.Y + ScreenBounds.Height);
+
+                sb.Draw(nightTileset, newPosition, map[col, row], Color.LightSlateGray);
+            }
+        }
+
+        // Resets the timer whenever the map gets too low to prevent too large calculations
+        if (position.Y >= ScreenBounds.Height)
+            timeCounter = 0;
+    }
+
+    /*
     private void setState(string state)
         {
             switch (state)
@@ -312,4 +472,5 @@ public class Game1 : Game
                     break;
             }
         }
+    */
 }

@@ -163,7 +163,7 @@ public class Enemy : GameObject {
 
             // Shooting 
 
-            if (bulletPattern != null)
+            if (bulletPattern.Count > 0)
             {
                 shotTimer += gameTime.ElapsedGameTime.TotalSeconds;
 

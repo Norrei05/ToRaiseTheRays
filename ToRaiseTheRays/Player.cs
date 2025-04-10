@@ -121,4 +121,9 @@ public class Player : GameObject {
             else if (other is Enemy enemy) TakeDamage(enemy.CollisionDamage);
         }
     }
+
+    public void Reset()
+    {
+        health = 100;
+    }
 }
