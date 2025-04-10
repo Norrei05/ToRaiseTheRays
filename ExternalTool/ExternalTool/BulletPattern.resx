@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>The is the external tool for creating bullet patterns.
+
+Click a spot on the direction grid, to choose the direction each bullet will be shot in.
+
+Then, to add bullets click a location on the position grid. Each bullet will have its stats set by the values in the textboxes.
+
+The Add Step button allows you to create another pattern that will be alternated with the previously created ones.</value>
+  </data>
 </root>

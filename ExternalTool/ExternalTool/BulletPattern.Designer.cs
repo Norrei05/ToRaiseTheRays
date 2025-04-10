@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BulletPattern));
             groupBoxDirection = new GroupBox();
             groupBoxPosition = new GroupBox();
             label1 = new Label();
@@ -173,7 +174,7 @@
             richTextBox1.ReadOnly = true;
             richTextBox1.Size = new Size(461, 181);
             richTextBox1.TabIndex = 13;
-            richTextBox1.Text = "";
+            richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
             // textBoxDelay
             // 
