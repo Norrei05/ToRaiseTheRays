@@ -17,6 +17,8 @@ namespace ToRaiseTheRays
         private List<string> fastEnemies;
         private List<string> bosses;
 
+        private List<Texture2D> bossTextures;
+
         private int normalWait;
         private double timer;
 
@@ -46,6 +48,8 @@ namespace ToRaiseTheRays
             normalEnemies = new List<string>();
             fastEnemies = new List<string>();
             bosses = new List<string>();
+
+            bossTextures = new List<Texture2D>();
             
             this.normalWait = normalWait;
             this.fastWait = fastWait;
@@ -78,12 +82,12 @@ namespace ToRaiseTheRays
                     {
                         if (currentWave < normalWavesCount)
                         {
-                            GenerateWave(normalEnemies[rng.Next(normalEnemies.Count)]);
+                            GenerateWave(normalEnemies[rng.Next(normalEnemies.Count)], enemyTexture);
                             currentWave++;
                         }
                         else if (currentWave == normalWavesCount)
                         {
-                            GenerateWave(bosses[rng.Next(bosses.Count)]);
+                            GenerateWave(bosses[rng.Next(bosses.Count)], enemyTexture);
                             currentWave++;
                         }
                         else
@@ -101,7 +105,7 @@ namespace ToRaiseTheRays
 
                 if (fastTimer >= fastWait)
                 {
-                    GenerateWave(fastEnemies[rng.Next(fastTypesCount)]);
+                    GenerateWave(fastEnemies[rng.Next(fastTypesCount)], enemyTexture);
 
                     fastTimer = 0;
                 }
@@ -166,9 +170,10 @@ namespace ToRaiseTheRays
             fastEnemies.Add(filename + ".wave");
         }
 
-        public void AddBoss(string filename)
+        public void AddBoss(string filename, Texture2D texture)
         {
             bosses.Add(filename + ".wave");
+            bossTextures.Add(texture);
         }
 
         public bool EnemiesRemain()
@@ -186,7 +191,7 @@ namespace ToRaiseTheRays
             return remain;
         }
 
-        private void GenerateWave(string filename)
+        private void GenerateWave(string filename, Texture2D texture)
         {
             StreamReader input = null!;
 
@@ -215,7 +220,7 @@ namespace ToRaiseTheRays
                         enemyStats[j] = int.Parse(enemyStatsText[j]);
                     }
 
-                    Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 2, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
+                    Game1.ActiveEntities.Add(new Enemy(texture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 2, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
                 }
             }
             catch (Exception e)
