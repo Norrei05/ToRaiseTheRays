@@ -123,13 +123,13 @@ namespace ExternalTool
 
                 for (int i = 0; i < gridTiles.Count; i++)
                 {
-                    if (gridTiles[i].X < 40 && gridTiles[i].X >= 0 && gridTiles[i].Y < 40 && gridTiles[i].Y >= 0)
+                    if (gridTiles[i].X < 41 && gridTiles[i].X >= 0 && gridTiles[i].Y < 41 && gridTiles[i].Y >= 0)
                         grid[gridTiles[i].X, gridTiles[i].Y].BackColor = Color.White;
 
                     gridTiles[i] = new Point(gridTiles[i].X + (20 - col),
                         gridTiles[i].Y + (20 - row));
 
-                    if (gridTiles[i].X < 40 && gridTiles[i].X >= 0 && gridTiles[i].Y < 40 && gridTiles[i].Y >= 0)
+                    if (gridTiles[i].X < 41 && gridTiles[i].X >= 0 && gridTiles[i].Y < 41 && gridTiles[i].Y >= 0)
                         grid[gridTiles[i].X, gridTiles[i].Y].BackColor = Color.FromArgb(100 + (150 / (i + 1)), 0, 0);
                 }
 
