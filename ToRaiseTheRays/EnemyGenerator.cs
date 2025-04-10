@@ -87,7 +87,9 @@ namespace ToRaiseTheRays
                         }
                         else if (currentWave == normalWavesCount)
                         {
-                            GenerateWave(bosses[rng.Next(bosses.Count)], enemyTexture);
+                            int thisBoss = rng.Next(bosses.Count);
+
+                            GenerateWave(bosses[thisBoss], bossTextures[thisBoss]);
                             currentWave++;
                         }
                         else

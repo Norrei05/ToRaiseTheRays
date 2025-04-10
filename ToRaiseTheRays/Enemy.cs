@@ -203,7 +203,7 @@ public class Enemy : GameObject {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
             else if (other is Player)
             {
-                Health = 0; // Dies instantly on crash
+                TakeDamage(20); // Dies instantly on crash
             }
         }
 
