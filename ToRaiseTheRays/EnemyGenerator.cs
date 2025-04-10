@@ -53,7 +53,7 @@ namespace ToRaiseTheRays
             timer = 0;
             fastTimer = 0;
 
-            normalWavesCount = 3;
+            normalWavesCount = 1;
             currentWave = 0;
 
             fastTypesCount = 0;
@@ -83,6 +83,7 @@ namespace ToRaiseTheRays
                     }
                     else if (currentWave == normalWavesCount)
                     {
+                        currentWave++;
                         GenerateWave(bosses[rng.Next(bosses.Count)]);
                     }
 
@@ -96,7 +97,7 @@ namespace ToRaiseTheRays
                     fastTimer = 0;
                 }
 
-                if (currentWave == normalWavesCount)
+                if (currentWave >= normalWavesCount)
                 {
                     bool defeatedBoss = true;
 
@@ -125,6 +126,9 @@ namespace ToRaiseTheRays
         {
             inPlay = true;
 
+            timer = 0;
+            fastTimer = 0;
+
             normalWavesCount += 2;
             currentWave = 0;
             
@@ -138,6 +142,9 @@ namespace ToRaiseTheRays
         {
             normalWavesCount = 3;
             fastTypesCount = 1;
+
+            timer = 0;
+            fastTimer = 0;
         }
 
         public void AddNormal(string filename)
