@@ -53,7 +53,7 @@ public class Enemy : GameObject {
 
         Spawning = true;
         
-        spawnTarget = spawnPosition;
+        spawnTarget = new Vector2(spawnPosition.X - position.Width / 2, spawnPosition.Y - position.Height / 2);
         spawnDuration = spawnTime;
         timer = 0;
         
@@ -94,7 +94,7 @@ public class Enemy : GameObject {
         // Sets information for enemy movement
 
         lastPosition = new Vector2(this.position.X, this.position.Y);
-        target = spawnPosition + movements[patternIndex];
+        target = spawnTarget + movements[patternIndex];
     }
 
     // Methods

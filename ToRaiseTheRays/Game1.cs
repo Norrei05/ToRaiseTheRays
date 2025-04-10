@@ -95,7 +95,7 @@ public class Game1 : Game
         timeCounter = 0;
         secondTimeCounter = 0;
 
-        dayTime = 10;
+        dayTime = 7;
         dayTimer = 0;
 
         position = new Vector2(0, map[0, 0].Y);
