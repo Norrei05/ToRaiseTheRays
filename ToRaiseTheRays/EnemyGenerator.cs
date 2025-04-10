@@ -70,24 +70,33 @@ namespace ToRaiseTheRays
         {
             if (inPlay)
             {
-                timer += gameTime.ElapsedGameTime.TotalSeconds;
                 fastTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (timer >= normalWait)
                 {
-
-                    if (currentWave < normalWavesCount)
+                    if (!EnemiesRemain())
                     {
-                        currentWave++;
-                        GenerateWave(normalEnemies[rng.Next(normalEnemies.Count)]);
-                    }
-                    else if (currentWave == normalWavesCount)
-                    {
-                        currentWave++;
-                        GenerateWave(bosses[rng.Next(bosses.Count)]);
-                    }
+                        if (currentWave < normalWavesCount)
+                        {
+                            GenerateWave(normalEnemies[rng.Next(normalEnemies.Count)]);
+                            currentWave++;
+                        }
+                        else if (currentWave == normalWavesCount)
+                        {
+                            GenerateWave(bosses[rng.Next(bosses.Count)]);
+                            currentWave++;
+                        }
+                        else
+                        {
+                            inPlay = false;
+                        }
 
-                    timer = 0;
+                        timer = 0;
+                    }
+                }
+                else
+                {
+                    timer += gameTime.ElapsedGameTime.TotalSeconds;
                 }
 
                 if (fastTimer >= fastWait)
@@ -111,7 +120,7 @@ namespace ToRaiseTheRays
 
                     if (defeatedBoss)
                     {
-                        inPlay = false;
+                        
                     }
                 }
             }
@@ -162,6 +171,21 @@ namespace ToRaiseTheRays
             bosses.Add(filename + ".wave");
         }
 
+        public bool EnemiesRemain()
+        {
+            bool remain = false;
+
+            for (int i = 0; i < Game1.ActiveEntities.Count; i++)
+            {
+                if (Game1.ActiveEntities[i] is Enemy)
+                {
+                    remain = true;
+                }
+            }
+
+            return remain;
+        }
+
         private void GenerateWave(string filename)
         {
             StreamReader input = null!;
@@ -191,7 +215,7 @@ namespace ToRaiseTheRays
                         enemyStats[j] = int.Parse(enemyStatsText[j]);
                     }
 
-                    Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
+                    Game1.ActiveEntities.Add(new Enemy(enemyTexture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 2, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
                 }
             }
             catch (Exception e)

@@ -206,6 +206,8 @@ public class Enemy : GameObject {
                 Health = 0; // Dies instantly on crash
             }
         }
+
+        if (!Game1.ScreenBounds.Intersects(position) && !Spawning) Health = 0;
     }
 
     /// <summary>

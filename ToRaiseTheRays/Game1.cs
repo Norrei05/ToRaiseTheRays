@@ -93,7 +93,7 @@ public class Game1 : Game
         timeCounter = 0;
         secondTimeCounter = 0;
 
-        dayTime = 3;
+        dayTime = 10;
         dayTimer = 0;
 
         position = new Vector2(0, map[0, 0].Y);
@@ -141,7 +141,7 @@ public class Game1 : Game
 
         healthBar = Content.Load<Texture2D>("Health_Bar");
 
-        generator = new EnemyGenerator(10, 5, enemyTexture, BulletTexture);
+        generator = new EnemyGenerator(5, 15, enemyTexture, BulletTexture);
 
         generator.AddFast("Advance");
         generator.AddFast("Advance");
