@@ -6,7 +6,11 @@ using System.IO;
 
 namespace ToRaiseTheRays;
 
-public class Enemy : GameObject {
+/// <summary>
+/// Game objects that can damage enemies
+/// </summary>
+public class Enemy : GameObject 
+{
     
     // Fields/Properties
      
@@ -43,6 +47,9 @@ public class Enemy : GameObject {
 
     // Constructors
 
+    /// <summary>
+    /// Custom Constructor
+    /// </summary>
     public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string patternName, string bulletName,
         int health, int shotDamage, int collisionDamage, Texture2D bulletTexture) 
         : base(texture, position, velocity, alignment)
@@ -272,6 +279,10 @@ public class Enemy : GameObject {
         }
     }
 
+    /// <summary>
+    /// Loads bullet pattern by reading external files and 
+    /// saving the bullets to a 2 dimensional list
+    /// </summary>
     public void ReadBullets(string filename)
     {
         StreamReader input = null!;

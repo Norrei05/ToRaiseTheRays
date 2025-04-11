@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace ToRaiseTheRays
 {
+    /// <summary>
+    /// Handles wave progression
+    /// </summary>
     internal class EnemyGenerator
     {
         // Fields
@@ -43,6 +46,11 @@ namespace ToRaiseTheRays
 
         // Constructor
 
+        /// <summary>
+        /// Custom Constructor
+        /// </summary>
+        /// <param name="normalWait">time for each wave to generate after the last is defeated</param>
+        /// <param name="fastWait">time between each minor wave of enemies</param>
         public EnemyGenerator(int normalWait, int fastWait, Texture2D enemyTexture, Texture2D bulletTexture)
         {
             normalEnemies = new List<string>();
@@ -70,6 +78,18 @@ namespace ToRaiseTheRays
             rng = new Random();
         }
 
+        /// <summary>
+        /// Handles wave generation
+        /// 
+        /// If the generator is "inPlay":
+        /// 
+        /// Each normal wave (chosen randomly) generates after the last is defeated
+        /// 
+        /// Fast waves continously spawn during each wave
+        /// 
+        /// The boss fight loads after the last normal wave is completed
+        ///     If the boss is defeated "inPlay" becomes false
+        /// </summary>
         public void Update(GameTime gameTime)
         {
             if (inPlay)
@@ -132,11 +152,18 @@ namespace ToRaiseTheRays
             }
         }
 
+        /// <summary>
+        /// Starts the enemy generator
+        /// </summary>
         public void Start()
         {
             inPlay = true;
         }
 
+        /// <summary>
+        /// Increments the number of waves that will be generated
+        /// and the number of types of fast enemies that can appear
+        /// </summary>
         public void NextLevel()
         {
             inPlay = true;
@@ -153,6 +180,9 @@ namespace ToRaiseTheRays
             }
         }
 
+        /// <summary>
+        /// Resets fields to initial
+        /// </summary>
         public void Reset()
         {
             normalWavesCount = 3;
@@ -162,22 +192,35 @@ namespace ToRaiseTheRays
             fastTimer = 0;
         }
 
+        /// <summary>
+        /// Adds a normal wave 
+        /// </summary>
         public void AddNormal(string filename)
         {
             normalEnemies.Add(filename + ".wave");
         }
 
+        /// <summary>
+        /// Adds a fast wave
+        /// </summary>
         public void AddFast(string filename)
         {
             fastEnemies.Add(filename + ".wave");
         }
 
+        /// <summary>
+        /// Adds a boss and its texture
+        /// </summary>
+        /// <param name="filename"></param>
         public void AddBoss(string filename, Texture2D texture)
         {
             bosses.Add(filename + ".wave");
             bossTextures.Add(texture);
         }
 
+        /// <summary>
+        /// Checks if enemies still remain alive
+        /// </summary>
         public bool EnemiesRemain()
         {
             bool remain = false;
@@ -193,6 +236,9 @@ namespace ToRaiseTheRays
             return remain;
         }
 
+        /// <summary>
+        /// Generates enemies by reading an external file for the wave
+        /// </summary>
         private void GenerateWave(string filename, Texture2D texture)
         {
             StreamReader input = null!;

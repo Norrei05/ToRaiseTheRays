@@ -6,6 +6,9 @@ using System;
 
 namespace ToRaiseTheRays;
 
+/// <summary>
+/// Represents the gameobject the player controls
+/// </summary>
 public class Player : GameObject {
     public int Health { get => health; }
     private int health;
@@ -26,6 +29,9 @@ public class Player : GameObject {
     
     private Dictionary<string, Texture2D> directionSprites;
 
+    /// <summary>
+    /// Custom Constructor
+    /// </summary>
     public Player(Dictionary<string, Texture2D> sprites, Rectangle position, Texture2D fogTexture)
         : base(sprites["Barque_N"], position, Vector2.Zero, Alignment.FRIENDLY) {
         health = 100;
@@ -46,6 +52,9 @@ public class Player : GameObject {
         directionSprites = sprites;
     }
 
+    /// <summary>
+    /// Generates bullet
+    /// </summary>
     public void Shoot() {
         if (currentReloadTime <= 0 && Keyboard.GetState().IsKeyDown(Keys.Space)) {
             base.Shoot(new Vector2(0, -1), 10, 10, 20);
@@ -53,11 +62,17 @@ public class Player : GameObject {
         }
     }
 
+    /// <summary>
+    /// Decreases player health
+    /// </summary>
     public void TakeDamage(int damage) {
         health -= damage;
         invulLength = 60;
     }
 
+    /// <summary>
+    /// Updates player position
+    /// </summary>
     public override void Move() {
         KeyboardState state = Keyboard.GetState();
 
@@ -97,6 +112,9 @@ public class Player : GameObject {
         if (invulLength > 0) invulLength--;
     }
 
+    /// <summary>
+    /// Changes the players appearance depending on what direction it moves in
+    /// </summary>
     private void UpdateSprite(KeyboardState state) {
         string direction = "";
         
@@ -114,6 +132,10 @@ public class Player : GameObject {
         texture = directionSprites["Barque_" + direction];
     }
 
+    /// <summary>
+    /// Checks if the player has collided with an enemy or bullet
+    /// and makes proper changes
+    /// </summary>
     public override void CheckCollision(GameObject other) {
         if (other.Alignment == Alignment || invulLength > 0) return;
         if (position.Intersects(other.position)) {
@@ -122,6 +144,9 @@ public class Player : GameObject {
         }
     }
 
+    /// <summary>
+    /// Resets health
+    /// </summary>
     public void Reset()
     {
         health = 100;
