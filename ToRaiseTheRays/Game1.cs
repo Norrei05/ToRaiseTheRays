@@ -29,6 +29,7 @@ public class Game1 : Game
     private Texture2D enemyTexture;
 
     private Texture2D wingedBoss;
+    private Texture2D twinHead;
 
     // private Texture2D fogTexture;
 
@@ -118,6 +119,7 @@ public class Game1 : Game
 
         enemyTexture = Content.Load<Texture2D>("basic_enemy_1");
         wingedBoss = Content.Load<Texture2D>("Winged-Snake");
+        twinHead = Content.Load<Texture2D>("Two-Headed-Snake");
 
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
@@ -155,6 +157,7 @@ public class Game1 : Game
         generator.AddNormal("BasicWave");
 
         generator.AddBoss("winged", wingedBoss);
+        generator.AddBoss("TwinHead", twinHead);
     }
 
     /// <summary>
