@@ -1,13 +1,13 @@
 3
 SideToSide
-StraightDown
+DownDelay_1
 120,90
 50,100,10,10,100,100
 SideToSide
-StraightDown
+DownDelay_2
 300,90
 50,100,10,10,100,100
 SideToSide
-StraightDown
+DownDelay_1
 470,90
 50,100,10,10,100,100

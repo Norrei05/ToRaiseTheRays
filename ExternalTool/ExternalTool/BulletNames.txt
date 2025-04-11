@@ -3,3 +3,5 @@ None
 AllDirections
 
 TwinHead
+DownDelay_1
+DownDelay_2
