@@ -22,6 +22,8 @@ public class Enemy : GameObject
 
     private double timer;
 
+    private double invulTime;
+
     // Movement
 
     private Vector2 spawnTarget;
@@ -57,6 +59,8 @@ public class Enemy : GameObject
         Health = health;
         ShotDamage = shotDamage;
         CollisionDamage = collisionDamage;
+
+        invulTime = 0;
 
         Spawning = true;
         
@@ -195,6 +199,11 @@ public class Enemy : GameObject
             }
         }
 
+
+        if (invulTime > 0)
+        {
+            invulTime -= gameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
     /// <summary>
@@ -208,9 +217,10 @@ public class Enemy : GameObject
         if (other.Alignment == Alignment) return;
         if (position.Intersects(other.position)) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
-            else if (other is Player && !Spawning)
+            else if (other is Player && !Spawning && invulTime <= 0)
             {
-                TakeDamage(20); // Dies instantly on crash
+                TakeDamage(20);
+                invulTime = 0.8;
             }
         }
 
