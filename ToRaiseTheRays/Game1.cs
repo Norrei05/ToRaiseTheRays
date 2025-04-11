@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ToRaiseTheRays;
 
-enum GameState
+public enum GameState
 {
     Start,
     Day,
@@ -33,8 +33,8 @@ public class Game1 : Game
 
     // private Texture2D fogTexture;
 
-    //private string gameState;
-    private GameState gameState;
+    // Static to allow access in other classes (Player)
+    public static GameState gameState;
 
     private Player player;
     private EnemyGenerator generator;
@@ -96,7 +96,7 @@ public class Game1 : Game
         timeCounter = 0;
         secondTimeCounter = 0;
 
-        dayTime = 7;
+        dayTime = 3;
         dayTimer = 0;
 
         position = new Vector2(0, map[0, 0].Y);
@@ -125,6 +125,7 @@ public class Game1 : Game
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
         {
             playerSprites["Barque_" + direction] = Content.Load<Texture2D>($"PlayerSpritesNight/Barque_{direction}");
+            playerSprites["Barque_" + direction + "_Day"] = Content.Load<Texture2D>($"PlayerSpritesDay/Barque_{direction}_Day");
         }
 
         // Load in fog of war asset
@@ -146,7 +147,7 @@ public class Game1 : Game
 
         healthBar = Content.Load<Texture2D>("Health_Bar");
 
-        generator = new EnemyGenerator(5, 15, enemyTexture, BulletTexture);
+        generator = new EnemyGenerator(10, 5, enemyTexture, BulletTexture);
 
         generator.AddFast("Advance");
         generator.AddFast("Advance");
@@ -343,7 +344,7 @@ public class Game1 : Game
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
 
                 if (player.Health > 0)
-                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(31, ScreenBounds.Height - 55), Color.OrangeRed);
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
                 foreach (GameObject entity in ActiveEntities) entity.Draw();
 
@@ -356,7 +357,7 @@ public class Game1 : Game
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
 
                 if (player.Health > 0)
-                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(31, ScreenBounds.Height - 55), Color.OrangeRed);
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
                 foreach (GameObject entity in ActiveEntities) entity.Draw();
 
@@ -467,7 +468,7 @@ public class Game1 : Game
         else
         {
             tileset = dayTileset;
-            color = Color.AntiqueWhite;
+            color = Color.Azure;
         }
 
         // Loops through every tile in map, displaying to screen and moving based on how long the game's been running

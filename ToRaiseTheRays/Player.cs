@@ -128,8 +128,12 @@ public class Player : GameObject {
         else if (horizontal < 0) direction += "L";
         
         if (direction == "") direction = "N";
-        
-        texture = directionSprites["Barque_" + direction];
+
+        // Changes boat sprite based on which game state it is
+        if (Game1.gameState == GameState.Day)
+            texture = directionSprites["Barque_" + direction + "_Day"];
+        else
+            texture = directionSprites["Barque_" + direction];
     }
 
     /// <summary>
