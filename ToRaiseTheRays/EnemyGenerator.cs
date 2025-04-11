@@ -167,8 +167,8 @@ namespace ToRaiseTheRays
         /// </summary>
         public void Reset()
         {
-            normalWavesCount = 3;
-            fastTypesCount = 1;
+            normalWavesCount = 1;
+            fastTypesCount = 0;
 
             timer = 0;
             fastTimer = 0;
@@ -264,5 +264,19 @@ namespace ToRaiseTheRays
             }
         }
         
+
+        public void Draw(Texture2D texture, Rectangle screenBounds)
+        {
+            if (currentWave > normalWavesCount)
+            {
+                for (int i = 0; i < Game1.ActiveEntities.Count; i++)
+                {
+                    if (Game1.ActiveEntities[i] is Enemy e && bossTextures.Contains(e.Texture))
+                    {
+                        Game1.SpriteBatch.Draw(texture, new Rectangle(530, screenBounds.Height - 15 - (e.Health * 2), 50, e.Health * 2), Color.DarkRed);
+                    }
+                }
+            }
+        }
     }
 }

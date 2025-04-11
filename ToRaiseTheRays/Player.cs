@@ -43,7 +43,7 @@ public class Player : GameObject {
         velocityCap = 8.0f;
         friction = 0.1f;
         
-        reloadTime = 0.3f;
+        reloadTime = 0.35f;
         currentReloadTime = 0;
         
         // this.fogTexture = fogTexture;

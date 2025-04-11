@@ -7,3 +7,9 @@ DownDelay_1
 DownDelay_2
 Thrash
 SideShot
+DownDelay_1
+DownDelay_2
+DownDelay_2
+DownDelay_1
+VShotDelay_1
+VShotDelay_2

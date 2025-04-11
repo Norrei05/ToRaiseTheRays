@@ -143,7 +143,7 @@ public class Game1 : Game
         endScreen = Content.Load<Texture2D>("Title_Night");
 
         // Create player of size 44x44 at the bottom of the screen
-        Rectangle playerPos = new(ScreenBounds.Width / 2 - 22, ScreenBounds.Height - 100, 100, 100);
+        Rectangle playerPos = new(ScreenBounds.Width / 2 - 50, ScreenBounds.Height - 100, 100, 100);
         player = new Player(playerSprites, playerPos, null); // Passing null instead of fogTexture
         ActiveEntities.Add(player);
 
@@ -178,6 +178,9 @@ public class Game1 : Game
                 {
                     gameState = GameState.Day;
                     generator.Start();
+
+                    player.position.X = ScreenBounds.Width / 2 - player.position.Width / 2;
+                    player.position.Y = ScreenBounds.Height - 100;
                 }
 
                 break;
@@ -343,6 +346,8 @@ public class Game1 : Game
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
+
+                generator.Draw(healthBar, ScreenBounds);
 
                 if (player.Health > 0)
                     SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);

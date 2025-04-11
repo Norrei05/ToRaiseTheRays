@@ -47,6 +47,10 @@ public class Enemy : GameObject
     private int shotCount;
     private double shotTimer;
 
+    // Properties
+
+    public Texture2D Texture => texture;
+
     // Constructors
 
     /// <summary>
@@ -215,12 +219,12 @@ public class Enemy : GameObject
     /// <param name="other">GameObject being checked for collisions</param>
     public override void CheckCollision(GameObject other) {
         if (other.Alignment == Alignment) return;
-        if (position.Intersects(other.position)) {
+        if (position.Intersects(other.position) && !Spawning) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
-            else if (other is Player && !Spawning && invulTime <= 0)
+            else if (other is Player && invulTime <= 0)
             {
                 TakeDamage(20);
-                invulTime = 0.8;
+                invulTime = 1.2;
             }
         }
 
@@ -358,6 +362,18 @@ public class Enemy : GameObject
         {
             if (input != null)
                 input.Close();
+        }
+    }
+
+    public override void Draw()
+    {
+        if (Spawning)
+        {
+            Game1.SpriteBatch.Draw(texture, position, Color.Gray);
+        }
+        else
+        {
+            base.Draw();
         }
     }
 }
