@@ -11,8 +11,13 @@ using System.Windows.Forms;
 
 namespace ExternalTool
 {
+    /// <summary>
+    /// A form for writing enemy bullet information
+    /// </summary>
     public partial class BulletPattern : Form
     {
+        // Fields
+
         private PictureBox[,] positionGrid;
         private PictureBox[,] directionGrid;
 
@@ -29,6 +34,11 @@ namespace ExternalTool
 
         private List<string> bulletNames;
 
+        // Constructor
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public BulletPattern()
         {
             InitializeComponent();
@@ -73,7 +83,9 @@ namespace ExternalTool
             }
         }
 
-
+        /// <summary>
+        /// Creates the grids for direction and position
+        /// </summary>
         private void CreateMaps()
         {
             int tileWidth = 5;
@@ -149,6 +161,11 @@ namespace ExternalTool
             }
         }
 
+        // Methods
+
+        /// <summary>
+        /// Saves a bullet for the step in the pattern
+        /// </summary>
         public void PositionTileClicked(object sender, EventArgs e)
         {
             if (sender is PictureBox)
@@ -164,7 +181,7 @@ namespace ExternalTool
                 tile.BackColor = Color.Blue;
 
                 directions.Add(currentDirection);
-                positions.Add(new Vector2(col * 5, row * 5));
+                positions.Add(new Vector2(col * 10, row * 10));
 
                 int[] info = { int.Parse(textBoxDamage.Text),
                     int.Parse(textBoxSpeed.Text),
@@ -174,6 +191,10 @@ namespace ExternalTool
             }
         }
 
+        /// <summary>
+        /// Saves the direction the next bullet will go to depending
+        /// on where in the direction grid is clicked
+        /// </summary>
         public void DirectionTileClicked(object sender, EventArgs e)
         {
             if (sender is PictureBox)
@@ -207,6 +228,9 @@ namespace ExternalTool
             }
         }
 
+        /// <summary>
+        /// Adds a new step in the pattern sequence
+        /// </summary>
         private void buttonAdd_Click()
         {
             bullets.Add(new Bullet(directions, positions, bulletInfo));
@@ -239,11 +263,17 @@ namespace ExternalTool
             shots.Add(int.Parse(textBoxShots.Text));
         }
 
+        /// <summary>
+        /// Saves the last step (used when the save button is clicked)
+        /// </summary>
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             buttonAdd_Click();
         }
 
+        /// <summary>
+        /// Writes the bullet information to an external file
+        /// </summary>
         private void buttonSave_Click(object sender, EventArgs e)
         {
             buttonAdd_Click();

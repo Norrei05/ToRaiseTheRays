@@ -208,7 +208,7 @@ public class Enemy : GameObject
         if (other.Alignment == Alignment) return;
         if (position.Intersects(other.position)) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
-            else if (other is Player)
+            else if (other is Player && !Spawning)
             {
                 TakeDamage(20); // Dies instantly on crash
             }

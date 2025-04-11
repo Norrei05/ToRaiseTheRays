@@ -218,7 +218,7 @@ namespace ExternalTool
             SaveFileDialog fileSaver = new SaveFileDialog();
 
             fileSaver.Title = "Save a level file.";
-            fileSaver.Filter = "Level File|*.wave";
+            fileSaver.Filter = "Wave File|*.wave";
 
             DialogResult result = fileSaver.ShowDialog();
 
@@ -250,6 +250,9 @@ namespace ExternalTool
             }
         }
 
+        /// <summary>
+        /// Makes sure a proper movement file has been chosen
+        /// </summary>
         private void textBoxType_TextChanged(object sender, EventArgs e)
         {
             bool patternFound = false;
@@ -263,6 +266,9 @@ namespace ExternalTool
             patternChosen = patternFound;
         }
 
+        /// <summary>
+        /// Checks to make sure that integer input doesn't have text
+        /// </summary>
         private void InputIsInteger(object sender, EventArgs e)
         {
             if (sender is TextBox)
@@ -274,11 +280,14 @@ namespace ExternalTool
                 if (!int.TryParse(myInput.Text, out result))
                 {
                     MessageBox.Show("The input in this text box must be an integer", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    myInput.Text = "10";
+                    myInput.Text = "0";
                 }
             }
         }
 
+        /// <summary>
+        /// Makes sure that a proper bullet file has been chosen
+        /// </summary>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             bool bulletFound = false;

@@ -3,3 +3,8 @@ MoveAllAround
 SideToSide
 Test
 FullHorizontal
+GoRight
+GoLeft
+BullCharge
+DownUp
+UpDown

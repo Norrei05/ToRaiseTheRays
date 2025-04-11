@@ -144,7 +144,7 @@ public class Player : GameObject {
         if (other.Alignment == Alignment || invulLength > 0) return;
         if (position.Intersects(other.position)) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
-            else if (other is Enemy enemy) TakeDamage(enemy.CollisionDamage);
+            else if (other is Enemy enemy && !enemy.Spawning) TakeDamage(enemy.CollisionDamage);
         }
     }
 

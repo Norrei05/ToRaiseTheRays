@@ -160,7 +160,7 @@ namespace ExternalTool
             SaveFileDialog fileSaver = new SaveFileDialog();
 
             fileSaver.Title = "Save a level file.";
-            fileSaver.Filter = "Level File|*.pattern";
+            fileSaver.Filter = "Movement File|*.pattern";
 
             DialogResult result = fileSaver.ShowDialog();
 

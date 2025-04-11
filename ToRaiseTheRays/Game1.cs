@@ -30,6 +30,7 @@ public class Game1 : Game
 
     private Texture2D wingedBoss;
     private Texture2D twinHead;
+    private Texture2D hornBoss;
 
     // private Texture2D fogTexture;
 
@@ -96,7 +97,7 @@ public class Game1 : Game
         timeCounter = 0;
         secondTimeCounter = 0;
 
-        dayTime = 3;
+        dayTime = 5;
         dayTimer = 0;
 
         position = new Vector2(0, map[0, 0].Y);
@@ -120,6 +121,7 @@ public class Game1 : Game
         enemyTexture = Content.Load<Texture2D>("basic_enemy_1");
         wingedBoss = Content.Load<Texture2D>("Winged-Snake");
         twinHead = Content.Load<Texture2D>("Two-Headed-Snake");
+        hornBoss = Content.Load<Texture2D>("Horned-Snake");
 
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
@@ -147,18 +149,17 @@ public class Game1 : Game
 
         healthBar = Content.Load<Texture2D>("Health_Bar");
 
-        generator = new EnemyGenerator(10, 5, enemyTexture, BulletTexture);
+        generator = new EnemyGenerator(5, 10, enemyTexture, BulletTexture);
 
         generator.AddFast("Advance");
-        generator.AddFast("Advance");
-        generator.AddFast("Advance");
+        generator.AddFast("Pincer");
 
         generator.AddNormal("BasicWave");
-        generator.AddNormal("BasicWave");
-        generator.AddNormal("BasicWave");
+        generator.AddNormal("VShooters");
 
         generator.AddBoss("winged", wingedBoss);
         generator.AddBoss("TwinHead", twinHead);
+        generator.AddBoss("Horned", hornBoss);
     }
 
     /// <summary>

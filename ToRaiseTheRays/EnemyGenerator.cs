@@ -131,24 +131,6 @@ namespace ToRaiseTheRays
 
                     fastTimer = 0;
                 }
-
-                if (currentWave >= normalWavesCount)
-                {
-                    bool defeatedBoss = true;
-
-                    for (int i = 0; i < Game1.ActiveEntities.Count; i++)
-                    {
-                        if (Game1.ActiveEntities[i] is Enemy)
-                        {
-                            defeatedBoss = false;
-                        }
-                    }
-
-                    if (defeatedBoss)
-                    {
-                        
-                    }
-                }
             }
         }
 
@@ -268,7 +250,7 @@ namespace ToRaiseTheRays
                         enemyStats[j] = int.Parse(enemyStatsText[j]);
                     }
 
-                    Game1.ActiveEntities.Add(new Enemy(texture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 2, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
+                    Game1.ActiveEntities.Add(new Enemy(texture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
                 }
             }
             catch (Exception e)
