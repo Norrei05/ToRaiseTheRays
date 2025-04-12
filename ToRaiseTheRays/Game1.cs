@@ -154,8 +154,9 @@ public class Game1 : Game
         generator.AddFast("Advance");
         generator.AddFast("Pincer");
 
-        generator.AddNormal("BasicWave");
-        generator.AddNormal("VShooters");
+        //generator.AddNormal("BasicWave");
+        //generator.AddNormal("VShooters");
+        generator.AddNormal("Circling");
 
         generator.AddBoss("winged", wingedBoss);
         generator.AddBoss("TwinHead", twinHead);

@@ -13,3 +13,6 @@ DownDelay_2
 DownDelay_1
 VShotDelay_1
 VShotDelay_2
+Plus
+XDelay_1
+XDelay_2

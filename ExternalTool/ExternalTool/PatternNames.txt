@@ -8,3 +8,5 @@ GoLeft
 BullCharge
 DownUp
 UpDown
+CircleTopLeft
+CircleBottomRight
