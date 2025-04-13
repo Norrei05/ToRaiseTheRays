@@ -10,3 +10,4 @@ DownUp
 UpDown
 CircleTopLeft
 CircleBottomRight
+Looping

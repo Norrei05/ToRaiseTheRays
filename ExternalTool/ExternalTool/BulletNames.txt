@@ -16,3 +16,4 @@ VShotDelay_2
 Plus
 XDelay_1
 XDelay_2
+Spin

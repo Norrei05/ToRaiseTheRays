@@ -35,7 +35,7 @@ public class Player : GameObject {
     public Player(Dictionary<string, Texture2D> sprites, Rectangle position, Texture2D fogTexture)
         : base(sprites["Barque_N"], position, Vector2.Zero, Alignment.FRIENDLY) {
         health = 100;
-        invulLength = 60; // 1 second at 60fps
+        invulLength = 0; // 1 second at 60fps
         
         acceleration = Vector2.Zero;
         accelModifier = 0.4f;
@@ -154,5 +154,32 @@ public class Player : GameObject {
     public void Reset()
     {
         health = 100;
+        invulLength = 0;
+    }
+
+    public override void Draw()
+    {
+        if (invulLength > 0)
+        {
+            int colorNumber = invulLength & 6;
+
+            switch (colorNumber)
+            {
+                case 0:
+                case 1:
+                case 2:
+                    Game1.SpriteBatch.Draw(texture, position, Color.Orange);
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    Game1.SpriteBatch.Draw(texture, position, Color.Red);
+                    break;
+            }
+        }
+        else
+        {
+            base.Draw();
+        }
     }
 }

@@ -158,7 +158,8 @@ public class Game1 : Game
         generator.AddNormal("VShooters");
         generator.AddNormal("Circling");
 
-        generator.AddBoss("winged", wingedBoss);
+        generator.AddBoss("Winged", wingedBoss);
+        generator.AddBoss("Twister", wingedBoss);
         generator.AddBoss("TwinHead", twinHead);
         generator.AddBoss("Horned", hornBoss);
     }

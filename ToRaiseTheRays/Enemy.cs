@@ -163,6 +163,9 @@ public class Enemy : GameObject
             // in order for the enemy to move to its next position
             if (timer >= timeReq)
             {
+                position.X = (int) target.X;
+                position.Y = (int) target.Y;
+
                 patternIndex++;
                 
                 if (patternIndex >= movements.Count)
