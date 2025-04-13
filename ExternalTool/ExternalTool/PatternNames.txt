@@ -11,3 +11,4 @@ UpDown
 CircleTopLeft
 CircleBottomRight
 Looping
+Intimidate

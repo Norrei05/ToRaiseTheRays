@@ -162,6 +162,7 @@ public class Game1 : Game
         generator.AddBoss("Twister", wingedBoss);
         generator.AddBoss("TwinHead", twinHead);
         generator.AddBoss("Horned", hornBoss);
+        generator.AddBoss("KillerSnake", hornBoss);
     }
 
     /// <summary>
