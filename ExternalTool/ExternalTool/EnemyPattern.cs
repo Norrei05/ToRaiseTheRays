@@ -25,6 +25,8 @@ namespace ExternalTool
 
         private List<string> patternNames;
 
+        private Color prevColor;
+
         // Constructor
 
         public EnemyPattern()
@@ -75,6 +77,8 @@ namespace ExternalTool
                     groupBoxGrid.Controls.Add(grid[col, row]);
 
                     grid[col, row].Click += TileClicked!;
+                    grid[col, row].MouseEnter += TileEnter!;
+                    grid[col, row].MouseLeave += TileLeave!;
                 }
             }
 
@@ -103,6 +107,8 @@ namespace ExternalTool
                 if (input != null)
                     input.Close();
             }
+
+            prevColor = Color.White;
         }
 
         // Methods
@@ -144,6 +150,29 @@ namespace ExternalTool
 
                 gridTiles.Add(new Point(20, 20));
                 grid[20, 20].BackColor = Color.Blue;
+
+                prevColor = tile.BackColor;
+            }
+        }
+
+        public void TileEnter(object sender, EventArgs e)
+        {
+            if (sender is PictureBox)
+            {
+                PictureBox tile = (PictureBox)sender;
+
+                prevColor = tile.BackColor;
+                tile.BackColor = Color.LightBlue;
+            }
+        }
+
+        public void TileLeave(object sender, EventArgs e)
+        {
+            if (sender is PictureBox)
+            {
+                PictureBox tile = (PictureBox)sender;
+
+                tile.BackColor = prevColor;
             }
         }
 
