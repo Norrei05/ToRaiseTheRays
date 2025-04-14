@@ -18,3 +18,5 @@ XDelay_1
 XDelay_2
 Spin
 BigShooter
+Spray
+Spray

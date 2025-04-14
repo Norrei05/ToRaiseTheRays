@@ -12,3 +12,4 @@ CircleTopLeft
 CircleBottomRight
 Looping
 Intimidate
+VMove
