@@ -118,10 +118,10 @@ public class Game1 : Game
         PapyrusFont = Content.Load<SpriteFont>("Papyrus");
         BulletTexture = Content.Load<Texture2D>("Bullet2");
 
-        enemyTexture = Content.Load<Texture2D>("basic_enemy_1");
-        wingedBoss = Content.Load<Texture2D>("Winged-Snake");
-        twinHead = Content.Load<Texture2D>("Two-Headed-Snake");
-        hornBoss = Content.Load<Texture2D>("Horned-Snake");
+        enemyTexture = Content.Load<Texture2D>("Basic_Enemy");
+        wingedBoss = Content.Load<Texture2D>("Brighter_Winged_Snake");
+        twinHead = Content.Load<Texture2D>("Brighter_TwoHeaded_Snake");
+        hornBoss = Content.Load<Texture2D>("Brighter_Horned_Snake");
 
         // Load all player sprites
         foreach (string direction in new string[]{ "N", "U", "D", "L", "R", "UL", "UR", "DL", "DR" })
@@ -351,7 +351,7 @@ public class Game1 : Game
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
 
-                generator.Draw(healthBar, ScreenBounds);
+                generator.Draw(healthBar, ScreenBounds, PapyrusFont);
 
                 if (player.Health > 0)
                     SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
@@ -478,7 +478,7 @@ public class Game1 : Game
         else
         {
             tileset = dayTileset;
-            color = Color.Azure;
+            color = Color.WhiteSmoke;
         }
 
         // Loops through every tile in map, displaying to screen and moving based on how long the game's been running
@@ -505,34 +505,4 @@ public class Game1 : Game
             timeCounter = 0;
     }
 
-    /*
-    private void setState(string state)
-        {
-            switch (state)
-            {
-                case "title":
-                    //displays title, start message(PRESS START TO BEGIN)
-                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                    {
-                        gameState = "day";
-                    }
-                    break;
-                case "score":
-                    //displays scores
-                    break;
-                case "day":
-                    //Remove enemies and fog, begin restoration
-                    break;
-                case "night":
-                    //begin spawning enemies, create fog
-                    break;
-                case "game over":
-                    //halts movement, display game over message
-                    break;
-                default:
-                    //Should not be triggered, put error code here
-                    break;
-            }
-        }
-    */
 }

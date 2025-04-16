@@ -262,7 +262,7 @@ namespace ToRaiseTheRays
         }
         
 
-        public void Draw(Texture2D texture, Rectangle screenBounds)
+        public void Draw(Texture2D texture, Rectangle screenBounds, SpriteFont font)
         {
             if (currentWave > normalWavesCount)
             {
@@ -271,6 +271,9 @@ namespace ToRaiseTheRays
                     if (Game1.ActiveEntities[i] is Enemy e && bossTextures.Contains(e.Texture))
                     {
                         Game1.SpriteBatch.Draw(texture, new Rectangle(530, screenBounds.Height - 15 - (e.Health * 2), 50, e.Health * 2), Color.DarkRed);
+
+                        if (e.Health > 0)
+                            Game1.SpriteBatch.DrawString(font, "+", new Vector2(screenBounds.Width - 54, screenBounds.Height - 55), Color.Yellow);
                     }
                 }
             }
