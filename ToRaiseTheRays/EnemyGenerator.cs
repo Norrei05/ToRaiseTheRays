@@ -155,11 +155,8 @@ namespace ToRaiseTheRays
 
             normalWavesCount += 1;
             currentWave = 0;
-            
-            if (typesCount < fastEnemies.Count)
-            {
-                typesCount++;
-            }
+
+            typesCount++;
         }
 
         /// <summary>
