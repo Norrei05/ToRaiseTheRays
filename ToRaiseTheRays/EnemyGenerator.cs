@@ -31,7 +31,7 @@ namespace ToRaiseTheRays
         private int normalWavesCount;
         private int currentWave;
 
-        private int fastTypesCount;
+        private int typesCount;
 
         private Texture2D enemyTexture;
         private Texture2D bulletTexture;
@@ -65,10 +65,10 @@ namespace ToRaiseTheRays
             timer = 0;
             fastTimer = 0;
 
-            normalWavesCount = 1;
+            normalWavesCount = 0;
             currentWave = 0;
 
-            fastTypesCount = 0;
+            typesCount = 0;
 
             this.enemyTexture = enemyTexture;
             this.bulletTexture = bulletTexture;
@@ -102,7 +102,7 @@ namespace ToRaiseTheRays
                     {
                         if (currentWave < normalWavesCount)
                         {
-                            GenerateWave(normalEnemies[rng.Next(normalEnemies.Count)], enemyTexture);
+                            GenerateWave(normalEnemies[rng.Next(Math.Clamp(typesCount, 1, normalEnemies.Count))], enemyTexture);
                             currentWave++;
                         }
                         else if (currentWave == normalWavesCount)
@@ -127,7 +127,7 @@ namespace ToRaiseTheRays
 
                 if (fastTimer >= fastWait)
                 {
-                    GenerateWave(fastEnemies[rng.Next(fastTypesCount)], enemyTexture);
+                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], enemyTexture);
 
                     fastTimer = 0;
                 }
@@ -153,12 +153,12 @@ namespace ToRaiseTheRays
             timer = 0;
             fastTimer = 0;
 
-            normalWavesCount += 2;
+            normalWavesCount += 1;
             currentWave = 0;
             
-            if (fastTypesCount < fastEnemies.Count)
+            if (typesCount < fastEnemies.Count)
             {
-                fastTypesCount++;
+                typesCount++;
             }
         }
 
@@ -167,8 +167,8 @@ namespace ToRaiseTheRays
         /// </summary>
         public void Reset()
         {
-            normalWavesCount = 1;
-            fastTypesCount = 0;
+            normalWavesCount = 0;
+            typesCount = 0;
 
             timer = 0;
             fastTimer = 0;

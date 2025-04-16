@@ -260,7 +260,6 @@ public class Enemy : GameObject
 
     // File Inputs
 
-
     /// <summary>
     /// Loads the enemies movement pattern from an external file
     /// </summary>

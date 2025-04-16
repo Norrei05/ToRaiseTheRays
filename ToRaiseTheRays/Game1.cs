@@ -159,11 +159,11 @@ public class Game1 : Game
         generator.AddNormal("Circling");
 
         generator.AddBoss("Winged", wingedBoss);
-        generator.AddBoss("Twister", wingedBoss);
+        //generator.AddBoss("Twister", wingedBoss);
         generator.AddBoss("TwinHead", twinHead);
         //generator.AddBoss("SlowEnd", twinHead);
         generator.AddBoss("Horned", hornBoss);
-        generator.AddBoss("KillerSnake", hornBoss);
+        //generator.AddBoss("KillerSnake", hornBoss);
     }
 
     /// <summary>
