@@ -13,3 +13,5 @@ CircleBottomRight
 Looping
 Intimidate
 VMove
+Stationary
+Curve

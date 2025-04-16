@@ -65,7 +65,7 @@ namespace ToRaiseTheRays
             timer = 0;
             fastTimer = 0;
 
-            normalWavesCount = -2;
+            normalWavesCount = 1;
             currentWave = 0;
 
             fastTypesCount = 0;
