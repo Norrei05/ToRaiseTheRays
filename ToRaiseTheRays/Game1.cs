@@ -36,6 +36,8 @@ public class Game1 : Game
 
     // Static to allow access in other classes (Player)
     public static GameState gameState;
+    private GameState prevState;
+    private KeyboardState prevKeyboard;
 
     private Player player;
     private EnemyGenerator generator;
@@ -238,6 +240,11 @@ public class Game1 : Game
 
                     gameState = GameState.Night;
                 }
+                else if (Keyboard.GetState().IsKeyDown(Keys.Enter) || prevKeyboard.IsKeyUp(Keys.Enter))
+                {
+                    prevState = gameState;
+                    gameState = GameState.Pause;
+                }
 
                 break;
             case GameState.Night:
@@ -270,27 +277,23 @@ public class Game1 : Game
                 // Remove dead entities
                 for (int i = ActiveEntities.Count - 1; i >= 0; i--)
                 {
-                    SpriteBatch = new SpriteBatch(GraphicsDevice);
-                    PapyrusFont = Content.Load<SpriteFont>("Papyrus");
-                    // Starting gamestate is the title screen
-                    //gameState = "title";
                     if ((ActiveEntities[i] is Bullet bullet && !bullet.Alive) ||
                         (ActiveEntities[i] is Enemy enemy && enemy.Health <= 0))
                     {
                         ActiveEntities.RemoveAt(i);
                     }
                 }
-
-                if (player.Health <= 0)
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) || prevKeyboard.IsKeyUp(Keys.Enter))
+                {
+                    prevState = gameState;
+                    gameState = GameState.Pause;
+                }
+                else if (player.Health <= 0)
                 {
                     gameState = GameState.End;
 
                     for (int i = ActiveEntities.Count - 1; i >= 0; i--)
                     {
-                        SpriteBatch = new SpriteBatch(GraphicsDevice);
-                        PapyrusFont = Content.Load<SpriteFont>("Papyrus");
-                        // Starting gamestate is the title screen
-                        //gameState = "title";
                         if ((ActiveEntities[i] is Bullet bullet) ||
                             (ActiveEntities[i] is Enemy enemy))
                         {
@@ -304,6 +307,12 @@ public class Game1 : Game
                 }
 
                 break;
+            case GameState.Pause:
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter)||prevKeyboard.IsKeyUp(Keys.Enter))
+                {
+                    gameState = prevState;
+                }
+                break;
             case GameState.End:
                 if (kb.IsKeyDown(Keys.Enter))
                 {
@@ -314,9 +323,9 @@ public class Game1 : Game
 
                 break;
         }
-       
 
-        
+
+        prevKeyboard = Keyboard.GetState();
 
         base.Update(gameTime);
     }
@@ -371,6 +380,21 @@ public class Game1 : Game
 
                 foreach (GameObject entity in ActiveEntities) entity.Draw();
 
+                break;
+            case GameState.Pause:
+                if (prevState == GameState.Day)
+                {
+                    DrawMap(SpriteBatch, gameTime, false);
+                }
+                else
+                {
+                    DrawMap(SpriteBatch, gameTime, true);
+                }
+                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
+                if (player.Health > 0)
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw();
                 break;
             case GameState.End:
 
