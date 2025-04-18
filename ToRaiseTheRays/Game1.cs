@@ -220,8 +220,10 @@ public class Game1 : Game
                 // Remove dead entities
                 for (int i = ActiveEntities.Count - 1; i >= 0; i--)
                 {
+                    /*
                     SpriteBatch = new SpriteBatch(GraphicsDevice);
                     PapyrusFont = Content.Load<SpriteFont>("Papyrus");
+                    */
                     // Starting gamestate is the title screen
                     //gameState = "title";
                     if ((ActiveEntities[i] is Bullet bullet && !bullet.Alive) ||
@@ -240,7 +242,7 @@ public class Game1 : Game
 
                     gameState = GameState.Night;
                 }
-                else if (Keyboard.GetState().IsKeyDown(Keys.Enter) || prevKeyboard.IsKeyUp(Keys.Enter))
+                else if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
                     prevState = gameState;
                     gameState = GameState.Pause;
@@ -283,7 +285,7 @@ public class Game1 : Game
                         ActiveEntities.RemoveAt(i);
                     }
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) || prevKeyboard.IsKeyUp(Keys.Enter))
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
                     prevState = gameState;
                     gameState = GameState.Pause;
@@ -308,7 +310,7 @@ public class Game1 : Game
 
                 break;
             case GameState.Pause:
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter)||prevKeyboard.IsKeyUp(Keys.Enter))
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
                     gameState = prevState;
                 }
