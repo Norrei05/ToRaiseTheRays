@@ -102,14 +102,14 @@ namespace ToRaiseTheRays
                     {
                         if (currentWave < normalWavesCount)
                         {
-                            GenerateWave(normalEnemies[rng.Next(Math.Clamp(typesCount, 1, normalEnemies.Count))], enemyTexture);
+                            GenerateWave(normalEnemies[rng.Next(Math.Clamp(typesCount, 1, normalEnemies.Count))], enemyTexture, 50);
                             currentWave++;
                         }
                         else if (currentWave == normalWavesCount)
                         {
                             int thisBoss = rng.Next(bosses.Count);
 
-                            GenerateWave(bosses[thisBoss], bossTextures[thisBoss]);
+                            GenerateWave(bosses[thisBoss], bossTextures[thisBoss], 500);
                             currentWave++;
                         }
                         else
@@ -127,7 +127,7 @@ namespace ToRaiseTheRays
 
                 if (fastTimer >= fastWait)
                 {
-                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], enemyTexture);
+                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], enemyTexture, 10);
 
                     fastTimer = 0;
                 }
@@ -218,7 +218,7 @@ namespace ToRaiseTheRays
         /// <summary>
         /// Generates enemies by reading an external file for the wave
         /// </summary>
-        private void GenerateWave(string filename, Texture2D texture)
+        private void GenerateWave(string filename, Texture2D texture, int points)
         {
             StreamReader input = null!;
 
@@ -247,7 +247,7 @@ namespace ToRaiseTheRays
                         enemyStats[j] = int.Parse(enemyStatsText[j]);
                     }
 
-                    Game1.ActiveEntities.Add(new Enemy(texture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], bulletTexture));
+                    Game1.ActiveEntities.Add(new Enemy(texture, new Rectangle(0, 0, enemyStats[4], enemyStats[5]), new Vector2(enemyStats[1], 0), Alignment.ENEMY, new Vector2(posX, posY), 1, patternName, bulletName, enemyStats[0], enemyStats[2], enemyStats[3], points, bulletTexture));
                 }
             }
             catch (Exception e)

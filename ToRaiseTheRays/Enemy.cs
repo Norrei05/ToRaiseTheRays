@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks.Sources;
 
 namespace ToRaiseTheRays;
 
@@ -47,6 +48,8 @@ public class Enemy : GameObject
     private int shotCount;
     private double shotTimer;
 
+    private int points;
+
     // Properties
 
     public Texture2D Texture => texture;
@@ -57,7 +60,7 @@ public class Enemy : GameObject
     /// Custom Constructor
     /// </summary>
     public Enemy(Texture2D texture, Rectangle position, Vector2 velocity, Alignment alignment, Vector2 spawnPosition, double spawnTime, string patternName, string bulletName,
-        int health, int shotDamage, int collisionDamage, Texture2D bulletTexture) 
+        int health, int shotDamage, int collisionDamage, int points, Texture2D bulletTexture) 
         : base(texture, position, velocity, alignment)
     {
         Health = health;
@@ -110,6 +113,10 @@ public class Enemy : GameObject
 
         lastPosition = new Vector2(this.position.X, this.position.Y);
         target = spawnTarget + movements[patternIndex];
+
+        // Sets score
+
+        this.points = points;
     }
 
     // Methods
@@ -229,6 +236,9 @@ public class Enemy : GameObject
                 TakeDamage(20);
                 invulTime = 1.2;
             }
+
+            if (Health <= 0)
+                Game1.score += points;
         }
 
         if (!Game1.ScreenBounds.Intersects(position) && !Spawning) Health = 0;

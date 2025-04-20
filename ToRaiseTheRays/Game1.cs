@@ -23,14 +23,26 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     public static SpriteBatch SpriteBatch { get; private set; }
     public static SpriteFont PapyrusFont { get; private set; }
-   
+
+    // Textures
+
     private Dictionary<string, Texture2D> playerSprites;
+
     public static Texture2D BulletTexture { get; private set; }
     private Texture2D enemyTexture;
 
     private Texture2D wingedBoss;
     private Texture2D twinHead;
     private Texture2D hornBoss;
+
+    private Texture2D healthBar;
+
+    private Texture2D dayTileset;
+    private Texture2D nightTileset;
+    private Rectangle[,] map;
+
+    private Texture2D startScreen;
+    private Texture2D endScreen;
 
     // private Texture2D fogTexture;
 
@@ -42,13 +54,6 @@ public class Game1 : Game
     private Player player;
     private EnemyGenerator generator;
 
-    private Texture2D dayTileset;
-    private Texture2D nightTileset;
-    private Rectangle[,] map;
-
-    private Texture2D startScreen;
-    private Texture2D endScreen;
-
     private float animationSpeedFPS;
     private float secondsPerFrame;
     private float timeCounter;
@@ -57,12 +62,12 @@ public class Game1 : Game
     private Vector2 position;
     private Vector2 newPosition;
 
-    private Texture2D healthBar;
-
     private int dayTime;
     private double dayTimer;
 
     private float opacity;
+
+    public static int score;
 
     public static List<GameObject> ActiveEntities { get; private set; }
 
@@ -110,6 +115,8 @@ public class Game1 : Game
         gameState = GameState.Start;
 
         opacity = 0;
+
+        score = 0;
 
         base.Initialize();
     }
@@ -191,6 +198,8 @@ public class Game1 : Game
 
                     player.position.X = ScreenBounds.Width / 2 - player.position.Width / 2;
                     player.position.Y = ScreenBounds.Height - 100;
+
+                    score = 0;
                 }
 
                 break;
