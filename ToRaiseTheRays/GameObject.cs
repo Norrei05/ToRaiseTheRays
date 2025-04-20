@@ -54,5 +54,5 @@ public abstract class GameObject {
     /// <summary>
     /// Draws object
     /// </summary>
-    public virtual void Draw() => Game1.SpriteBatch.Draw(texture, position, Color.White);
+    public virtual void Draw(Color overlay) => Game1.SpriteBatch.Draw(texture, position, overlay);
 }

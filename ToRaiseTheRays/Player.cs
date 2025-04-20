@@ -157,7 +157,7 @@ public class Player : GameObject {
         invulLength = 0;
     }
 
-    public override void Draw()
+    public override void Draw(Color overlay)
     {
         if (invulLength > 0)
         {
@@ -168,7 +168,7 @@ public class Player : GameObject {
                 case 0:
                 case 1:
                 case 2:
-                    Game1.SpriteBatch.Draw(texture, position, Color.Orange);
+                    Game1.SpriteBatch.Draw(texture, position, overlay);
                     break;
                 case 3:
                 case 4:
@@ -179,7 +179,7 @@ public class Player : GameObject {
         }
         else
         {
-            base.Draw();
+            base.Draw(overlay);
         }
     }
 }
