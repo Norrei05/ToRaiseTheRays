@@ -253,6 +253,7 @@ public class Game1 : Game
 
                 dayTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
+                // Switch to Night state when timer runs out, and Pause state when the Enter key is pressed once
                 if (dayTimer >= dayTime)
                 {
                     generator.NextLevel();
@@ -306,6 +307,8 @@ public class Game1 : Game
                         ActiveEntities.RemoveAt(i);
                     }
                 }
+
+                // Switch to Pause state when the Enter key is pressed once and Day state when the player health reaches 0 or the wave ends
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
                     prevState = gameState;
@@ -313,6 +316,7 @@ public class Game1 : Game
                 }
                 else if (player.Health <= 0)
                 {
+                    prevState = gameState;
                     gameState = GameState.End;
 
                     for (int i = ActiveEntities.Count - 1; i >= 0; i--)
@@ -326,12 +330,15 @@ public class Game1 : Game
                 }
                 else if (!generator.InPlay)
                 {
+                    prevState = gameState;
                     gameState = GameState.Day;
                     opacity = 1;
                 }
 
                 break;
             case GameState.Pause:
+                
+                // Returns to original state it was paused in when the Enter key is pressed again
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
                     gameState = prevState;
@@ -395,6 +402,10 @@ public class Game1 : Game
                 if (player.Health > 0)
                     SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
+                // Display current score to player
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(17, 17), Color.Yellow);
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(15, 15), Color.OrangeRed);
+
                 foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
 
                 break;
@@ -414,6 +425,13 @@ public class Game1 : Game
                 if (player.Health > 0)
                     SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
+                // Display current score to player
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(17, 17), Color.LightYellow);
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(15, 15), Color.OrangeRed);
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
+
+                // Stops displaying Day # and possible instructions around 3/4 of the way through the Day state
                 if (dayTimer <= dayTime * 0.75)
                 {
                     SpriteBatch.DrawString(PapyrusFont, $"DAY {dayCounter}", new Vector2(ScreenBounds.Width / 2 - 53, 127), Color.Black);
@@ -421,12 +439,10 @@ public class Game1 : Game
 
                     if (prevState == GameState.Start)
                     {
-                        SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 157, ScreenBounds.Height - 273), Color.Black);
-                        SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 155, ScreenBounds.Height - 273), Color.OrangeRed);
+                        SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 153, ScreenBounds.Height - 273), Color.Black);
+                        SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 155, ScreenBounds.Height - 275), Color.OrangeRed);
                     }
                 }
-
-                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
 
                 break;
             case GameState.Pause:
@@ -451,14 +467,22 @@ public class Game1 : Game
                 SpriteBatch.DrawString(PapyrusFont, "  PRESS ENTER TO\n RETURN TO GAME", new Vector2(ScreenBounds.Width / 2 - 203, ScreenBounds.Height - 273), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, "  PRESS ENTER TO\n RETURN TO GAME", new Vector2(ScreenBounds.Width / 2 - 205, ScreenBounds.Height - 275), Color.OrangeRed);
 
+                // Display current score to player
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(17 ,17), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(15, 15), Color.OrangeRed);
+
                 break;
             case GameState.End:
 
                 SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.White);
 
-                // Display information about controls to player
+                // Display game over information to player, including their final score (formatted a certain way)
+                String finalScore = String.Format("{0:0000000}", score);
+
                 SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 128, 127), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 130, 125), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 153, 327), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 155, 325), Color.OrangeRed);
                 SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER TO\n     START OVER", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 273), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER TO\n     START OVER", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 275), Color.OrangeRed);
 
