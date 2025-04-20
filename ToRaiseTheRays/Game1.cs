@@ -348,6 +348,7 @@ public class Game1 : Game
                     gameState = GameState.Start;
                     player.Reset();
                     generator.Reset();
+                    dayCounter = 1;
                 }
 
                 break;
@@ -472,7 +473,7 @@ public class Game1 : Game
                 break;
             case GameState.End:
 
-                UpdateHighScores(score, "placeholderName");
+                //UpdateHighScores(score, "placeholderName");
 
                 SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.White);
 
