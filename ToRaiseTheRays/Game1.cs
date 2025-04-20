@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Linq; // My enemy is here at last. Justified by File I/O.
 
 namespace ToRaiseTheRays;
 
@@ -474,6 +476,8 @@ public class Game1 : Game
                 break;
             case GameState.End:
 
+                UpdateHighScores(score, "placeholderName");
+
                 SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.White);
 
                 // Display game over information to player, including their final score (formatted a certain way)
@@ -632,6 +636,26 @@ public class Game1 : Game
         // Resets the timer whenever the map gets too low to prevent too large calculations
         if (position.Y >= ScreenBounds.Height)
             timeCounter = 0;
+    }
+
+    private void UpdateHighScores(int newScore, string playerName)
+    {
+        List<string> scores = new List<string>();
+
+        // Read existing scores from the file
+        if (File.Exists("highScores.txt")) scores = File.ReadAllLines("highScores.txt").ToList();
+
+        // Add the new score
+        scores.Add($"{playerName}|{newScore}");
+
+        // Sort scores in descending order
+        scores = scores.OrderByDescending(s => int.Parse(s.Split('|')[1])).ToList();
+
+        // Keep only the top 10 scores
+        if (scores.Count > 10) scores = scores.Take(10).ToList();
+
+        // Write updated scores back to the file
+        File.WriteAllLines("highScores.txt", scores);
     }
 
 }
