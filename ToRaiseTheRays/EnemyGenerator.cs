@@ -130,7 +130,7 @@ namespace ToRaiseTheRays
 
                 if (fastTimer >= fastWait)
                 {
-                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], fastTexture, 10);
+                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], fastTexture, 5);
 
                     fastTimer = 0;
                 }
