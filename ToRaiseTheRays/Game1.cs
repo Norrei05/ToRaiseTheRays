@@ -30,6 +30,7 @@ public class Game1 : Game
 
     public static Texture2D BulletTexture { get; private set; }
     private Texture2D enemyTexture;
+    private Texture2D fastEnemy;
 
     private Texture2D wingedBoss;
     private Texture2D twinHead;
@@ -134,6 +135,7 @@ public class Game1 : Game
         BulletTexture = Content.Load<Texture2D>("Bullet2");
 
         enemyTexture = Content.Load<Texture2D>("Basic_Enemy");
+        fastEnemy = Content.Load<Texture2D>("Small_Basic_Enemy");
         wingedBoss = Content.Load<Texture2D>("Brighter_Winged_Snake");
         twinHead = Content.Load<Texture2D>("Brighter_TwoHeaded_Snake");
         hornBoss = Content.Load<Texture2D>("Brighter_Horned_Snake");
@@ -164,9 +166,10 @@ public class Game1 : Game
 
         healthBar = Content.Load<Texture2D>("Health_Bar");
 
-        generator = new EnemyGenerator(5, 10, enemyTexture, BulletTexture);
+        generator = new EnemyGenerator(5, 10, enemyTexture, fastEnemy, BulletTexture);
 
         generator.AddFast("Advance");
+        generator.AddFast("Cross");
         generator.AddFast("Pincer");
 
         generator.AddNormal("BasicWave");

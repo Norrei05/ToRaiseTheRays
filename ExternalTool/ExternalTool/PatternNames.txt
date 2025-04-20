@@ -15,3 +15,4 @@ Intimidate
 VMove
 Stationary
 Curve
+GoUp

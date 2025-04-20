@@ -34,6 +34,8 @@ namespace ToRaiseTheRays
         private int typesCount;
 
         private Texture2D enemyTexture;
+        private Texture2D fastTexture;
+
         private Texture2D bulletTexture;
 
         private bool inPlay;
@@ -51,7 +53,7 @@ namespace ToRaiseTheRays
         /// </summary>
         /// <param name="normalWait">time for each wave to generate after the last is defeated</param>
         /// <param name="fastWait">time between each minor wave of enemies</param>
-        public EnemyGenerator(int normalWait, int fastWait, Texture2D enemyTexture, Texture2D bulletTexture)
+        public EnemyGenerator(int normalWait, int fastWait, Texture2D enemyTexture, Texture2D fastTexture, Texture2D bulletTexture)
         {
             normalEnemies = new List<string>();
             fastEnemies = new List<string>();
@@ -71,6 +73,7 @@ namespace ToRaiseTheRays
             typesCount = 0;
 
             this.enemyTexture = enemyTexture;
+            this.fastTexture = fastTexture;
             this.bulletTexture = bulletTexture;
 
             inPlay = false;
@@ -127,7 +130,7 @@ namespace ToRaiseTheRays
 
                 if (fastTimer >= fastWait)
                 {
-                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], enemyTexture, 10);
+                    GenerateWave(fastEnemies[rng.Next(Math.Clamp(typesCount, 1, fastEnemies.Count))], fastTexture, 10);
 
                     fastTimer = 0;
                 }
