@@ -363,13 +363,17 @@ public class Game1 : Game
                 break;
             case GameState.Night:
 
-                DrawMap(SpriteBatch, gameTime, true, 1);
+                DrawMap(SpriteBatch, gameTime, true, opacity);
 
                 if (opacity > 0)
                 {
-                    DrawMap(SpriteBatch, gameTime, false, opacity);
                     opacity -= 0.01f;
                 }
+                else
+                {
+                    opacity = 0f;
+                }
+
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -384,13 +388,17 @@ public class Game1 : Game
                 break;
             case GameState.Day:
 
-                DrawMap(SpriteBatch, gameTime, false, 1);
+                DrawMap(SpriteBatch, gameTime, false, opacity);
 
                 if (opacity > 0)
                 {
-                    DrawMap(SpriteBatch, gameTime, true, opacity);
                     opacity -= 0.01f;
                 }
+                else
+                {
+                    opacity = 0f;
+                }
+                
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -511,18 +519,26 @@ public class Game1 : Game
         timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         Texture2D tileset;
+        Texture2D oppositeTiles;
         Color color;
+        Color oppositeColor;
 
         // Adjusts the tileset and color overlay based on whether or not it is night
         if (isNight)
         {
             tileset = nightTileset;
+            oppositeTiles = dayTileset;
+
             color = Color.LightSlateGray;
+            oppositeColor = Color.WhiteSmoke;
         }
         else
         {
             tileset = dayTileset;
             color = Color.WhiteSmoke;
+
+            oppositeTiles = nightTileset;
+            oppositeColor = Color.LightSlateGray;
         }
 
         // Loops through every tile in map, displaying to screen and moving based on how long the game's been running
@@ -532,7 +548,10 @@ public class Game1 : Game
             {
                 // Normal map that scrolls based on time
                 position = new Vector2((col * 16), 0 - row * 16 + (timeCounter * 400));
-                sb.Draw(tileset, position, map[col, row], color*opacity);
+                sb.Draw(tileset, position, map[col, row], color);
+
+                if (opacity > 0)
+                    sb.Draw(oppositeTiles, position, map[col, row], oppositeColor*opacity);
 
                 // Other tiles that fill in wherever the normal map does not cover
                 if (position.Y >= 0)
@@ -540,7 +559,10 @@ public class Game1 : Game
                 else
                     newPosition = new Vector2(position.X, position.Y + ScreenBounds.Height);
 
-                sb.Draw(tileset, newPosition, map[col, row], color*opacity);
+                sb.Draw(tileset, newPosition, map[col, row], color);
+
+                if (opacity > 0)
+                    sb.Draw(oppositeTiles, newPosition, map[col, row], oppositeColor*opacity);
             }
         }
 
