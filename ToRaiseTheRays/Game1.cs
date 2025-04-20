@@ -62,6 +62,8 @@ public class Game1 : Game
     private int dayTime;
     private double dayTimer;
 
+    private float opacity;
+
     public static List<GameObject> ActiveEntities { get; private set; }
 
     // Constructor
@@ -106,6 +108,8 @@ public class Game1 : Game
         newPosition = new Vector2(1, 1);
 
         gameState = GameState.Start;
+
+        opacity = 0;
 
         base.Initialize();
     }
@@ -241,6 +245,7 @@ public class Game1 : Game
                     dayTimer = 0;
 
                     gameState = GameState.Night;
+                    opacity = 1;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
@@ -306,6 +311,7 @@ public class Game1 : Game
                 else if (!generator.InPlay)
                 {
                     gameState = GameState.Day;
+                    opacity = 1;
                 }
 
                 break;
@@ -357,7 +363,13 @@ public class Game1 : Game
                 break;
             case GameState.Night:
 
-                DrawMap(SpriteBatch, gameTime, true);
+                DrawMap(SpriteBatch, gameTime, true, 1);
+
+                if (opacity > 0)
+                {
+                    DrawMap(SpriteBatch, gameTime, false, opacity);
+                    opacity -= 0.01f;
+                }
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -372,7 +384,13 @@ public class Game1 : Game
                 break;
             case GameState.Day:
 
-                DrawMap(SpriteBatch, gameTime, false);
+                DrawMap(SpriteBatch, gameTime, false, 1);
+
+                if (opacity > 0)
+                {
+                    DrawMap(SpriteBatch, gameTime, true, opacity);
+                    opacity -= 0.01f;
+                }
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -386,11 +404,11 @@ public class Game1 : Game
             case GameState.Pause:
                 if (prevState == GameState.Day)
                 {
-                    DrawMap(SpriteBatch, gameTime, false);
+                    DrawMap(SpriteBatch, gameTime, false, 1);
                 }
                 else
                 {
-                    DrawMap(SpriteBatch, gameTime, true);
+                    DrawMap(SpriteBatch, gameTime, true, 1);
                 }
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
                 if (player.Health > 0)
@@ -488,7 +506,7 @@ public class Game1 : Game
     /// <param name="sb">Sprite batch being used to draw</param>
     /// <param name="gameTime">Current game time and scalar for auto scrolling map</param>
     /// <param name="isNight">Whether or not the game state is night</param>
-    private void DrawMap(SpriteBatch sb, GameTime gameTime, bool isNight)
+    private void DrawMap(SpriteBatch sb, GameTime gameTime, bool isNight, float opacity)
     {
         timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -514,7 +532,7 @@ public class Game1 : Game
             {
                 // Normal map that scrolls based on time
                 position = new Vector2((col * 16), 0 - row * 16 + (timeCounter * 400));
-                sb.Draw(tileset, position, map[col, row], color);
+                sb.Draw(tileset, position, map[col, row], color*opacity);
 
                 // Other tiles that fill in wherever the normal map does not cover
                 if (position.Y >= 0)
@@ -522,7 +540,7 @@ public class Game1 : Game
                 else
                     newPosition = new Vector2(position.X, position.Y + ScreenBounds.Height);
 
-                sb.Draw(tileset, newPosition, map[col, row], color);
+                sb.Draw(tileset, newPosition, map[col, row], color*opacity);
             }
         }
 
