@@ -332,6 +332,18 @@
 /processorParam:TextureFormat=Color
 /build:PlayerSpritesNight/Barque_UR.png
 
+#begin Small_Basic_Enemy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Small_Basic_Enemy.png
+
 #begin Tiles_Day_1.png
 /importer:TextureImporter
 /processor:TextureProcessor

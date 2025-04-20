@@ -367,7 +367,7 @@ public class Enemy : GameObject
         }
     }
 
-    public override void Draw()
+    public override void Draw(Color overlay)
     {
         if (Spawning)
         {
@@ -375,7 +375,7 @@ public class Enemy : GameObject
         }
         else
         {
-            base.Draw();
+            base.Draw(overlay);
         }
     }
 }

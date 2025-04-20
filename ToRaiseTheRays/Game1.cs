@@ -61,6 +61,7 @@ public class Game1 : Game
 
     private int dayTime;
     private double dayTimer;
+    private int dayCounter;
 
     private float opacity;
 
@@ -103,6 +104,7 @@ public class Game1 : Game
 
         dayTime = 5;
         dayTimer = 0;
+        dayCounter = 1;
 
         position = new Vector2(0, map[0, 0].Y);
         newPosition = new Vector2(1, 1);
@@ -187,6 +189,7 @@ public class Game1 : Game
                 if (kb.IsKeyDown(Keys.Space))
                 {
                     gameState = GameState.Day;
+                    prevState = GameState.Start;
                     generator.Start();
 
                     player.position.X = ScreenBounds.Width / 2 - player.position.Width / 2;
@@ -195,7 +198,6 @@ public class Game1 : Game
 
                 break;
             case GameState.Day:
-
                 player.Reset();
 
                 player.Shoot();
@@ -246,6 +248,8 @@ public class Game1 : Game
 
                     gameState = GameState.Night;
                     opacity = 1;
+
+                    dayCounter++;
                 }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
@@ -363,17 +367,13 @@ public class Game1 : Game
                 break;
             case GameState.Night:
 
-                DrawMap(SpriteBatch, gameTime, true, opacity);
+                DrawMap(SpriteBatch, gameTime, true, false, opacity);
 
+                // Change opacity for transition
                 if (opacity > 0)
-                {
                     opacity -= 0.01f;
-                }
                 else
-                {
                     opacity = 0f;
-                }
-
 
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
@@ -383,46 +383,62 @@ public class Game1 : Game
                 if (player.Health > 0)
                     SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
-                foreach (GameObject entity in ActiveEntities) entity.Draw();
+                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
 
                 break;
             case GameState.Day:
 
-                DrawMap(SpriteBatch, gameTime, false, opacity);
+                DrawMap(SpriteBatch, gameTime, false, false, opacity);
 
+                // Change opacity for transition
                 if (opacity > 0)
-                {
                     opacity -= 0.01f;
-                }
                 else
-                {
                     opacity = 0f;
-                }
                 
-
                 // Draws health bar to screen, updating based on the current player health
                 SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
 
                 if (player.Health > 0)
                     SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
-                foreach (GameObject entity in ActiveEntities) entity.Draw();
+                if (dayTimer <= dayTime * 0.75)
+                {
+                    SpriteBatch.DrawString(PapyrusFont, $"DAY {dayCounter}", new Vector2(ScreenBounds.Width / 2 - 53, 127), Color.Black);
+                    SpriteBatch.DrawString(PapyrusFont, $"DAY {dayCounter}", new Vector2(ScreenBounds.Width / 2 - 55, 125), Color.OrangeRed);
+
+                    if (prevState == GameState.Start)
+                    {
+                        SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 157, ScreenBounds.Height - 273), Color.Black);
+                        SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 155, ScreenBounds.Height - 273), Color.OrangeRed);
+                    }
+                }
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
 
                 break;
             case GameState.Pause:
-                if (prevState == GameState.Day)
-                {
-                    DrawMap(SpriteBatch, gameTime, false, 1);
-                }
-                else
-                {
-                    DrawMap(SpriteBatch, gameTime, true, 1);
-                }
-                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
-                if (player.Health > 0)
-                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
 
-                foreach (GameObject entity in ActiveEntities) entity.Draw();
+                // Use different maps based on the previous state
+                if (prevState == GameState.Day)
+                    DrawMap(SpriteBatch, gameTime, false, true, 0);
+                else
+                    DrawMap(SpriteBatch, gameTime, true, true, 0);
+
+                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.LightSlateGray);
+
+                if (player.Health > 0)
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.DarkRed);
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.LightSlateGray);
+
+                // Display pause screen text to players
+                SpriteBatch.DrawString(PapyrusFont, "GAME PAUSED", new Vector2(ScreenBounds.Width / 2 - 163, 127), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "GAME PAUSED", new Vector2(ScreenBounds.Width / 2 - 165, 125), Color.OrangeRed);
+
+                SpriteBatch.DrawString(PapyrusFont, "  PRESS ENTER TO\n RETURN TO GAME", new Vector2(ScreenBounds.Width / 2 - 203, ScreenBounds.Height - 273), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "  PRESS ENTER TO\n RETURN TO GAME", new Vector2(ScreenBounds.Width / 2 - 205, ScreenBounds.Height - 275), Color.OrangeRed);
+
                 break;
             case GameState.End:
 
@@ -514,30 +530,41 @@ public class Game1 : Game
     /// <param name="sb">Sprite batch being used to draw</param>
     /// <param name="gameTime">Current game time and scalar for auto scrolling map</param>
     /// <param name="isNight">Whether or not the game state is night</param>
-    private void DrawMap(SpriteBatch sb, GameTime gameTime, bool isNight, float opacity)
+    private void DrawMap(SpriteBatch sb, GameTime gameTime, bool isNight, bool isPaused, float opacity)
     {
-        timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        if (!isPaused)
+            timeCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         Texture2D tileset;
         Texture2D oppositeTiles;
         Color color;
         Color oppositeColor;
 
-        // Adjusts the tileset and color overlay based on whether or not it is night
+        // Adjusts the tileset and color overlay based on whether or not it is night and/or paused
         if (isNight)
         {
             tileset = nightTileset;
             oppositeTiles = dayTileset;
 
-            color = Color.LightSlateGray;
+            // Puts a slightly darker overlay over the screen when paused
+            if (isPaused)
+                color = Color.DarkSlateGray;
+            else
+                color = Color.LightSlateGray;
+
             oppositeColor = Color.WhiteSmoke;
         }
         else
         {
             tileset = dayTileset;
-            color = Color.WhiteSmoke;
-
             oppositeTiles = nightTileset;
+
+            // Puts a slightly darker overlay over the screen when paused
+            if (isPaused)
+                color = Color.LightSlateGray;
+            else
+                color = Color.WhiteSmoke;
+
             oppositeColor = Color.LightSlateGray;
         }
 
@@ -551,7 +578,7 @@ public class Game1 : Game
                 sb.Draw(tileset, position, map[col, row], color);
 
                 if (opacity > 0)
-                    sb.Draw(oppositeTiles, position, map[col, row], oppositeColor*opacity);
+                    sb.Draw(oppositeTiles, position, map[col, row], oppositeColor * opacity);
 
                 // Other tiles that fill in wherever the normal map does not cover
                 if (position.Y >= 0)
@@ -562,7 +589,7 @@ public class Game1 : Game
                 sb.Draw(tileset, newPosition, map[col, row], color);
 
                 if (opacity > 0)
-                    sb.Draw(oppositeTiles, newPosition, map[col, row], oppositeColor*opacity);
+                    sb.Draw(oppositeTiles, newPosition, map[col, row], oppositeColor * opacity);
             }
         }
 
