@@ -212,7 +212,7 @@ public class Game1 : Game
 
                 break;
             case GameState.Day:
-                player.Reset();
+                player.Heal();
 
                 player.Shoot();
 

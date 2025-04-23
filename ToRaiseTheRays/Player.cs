@@ -151,10 +151,21 @@ public class Player : GameObject {
     /// <summary>
     /// Resets health
     /// </summary>
-    public void Reset()
+    public void Heal()
     {
         health = 100;
         invulLength = 0;
+    }
+
+    /// <summary>
+    /// Resets player health an movement
+    /// </summary>
+    public void Reset()
+    {
+        Heal();
+
+        velocity = Vector2.Zero;
+        acceleration = Vector2.Zero;
     }
 
     public override void Draw(Color overlay)
