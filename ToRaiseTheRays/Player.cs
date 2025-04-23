@@ -83,10 +83,35 @@ public class Player : GameObject {
         if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up)) acceleration.Y -= accelModifier;
         if (state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.Down)) acceleration.Y += accelModifier;
 
+        if (state.IsKeyDown(Keys.U))
+        {
+            acceleration.X += 20;
+        }
+
+        if (position.X == 0 && position.Y == 0)
+        {
+            Console.WriteLine();
+        }
+
         // Update velocity
         velocity += acceleration;
         if (velocity != Vector2.Zero) velocity -= Vector2.Normalize(velocity) * friction;
-        if (velocity.Length() > velocityCap) velocity = Vector2.Normalize(velocity) * velocityCap;
+
+
+        if (float.IsNaN(velocity.X))
+        {
+            Console.WriteLine();
+        }
+
+        if (velocity.Length() > velocityCap)
+        {
+            velocity = Vector2.Normalize(velocity) * velocityCap;
+
+            if (float.IsNaN(velocity.X))
+            {
+                Console.WriteLine();
+            }
+        }
 
         // Update position
         position.X += (int)velocity.X;
@@ -99,6 +124,12 @@ public class Player : GameObject {
         // Update velocity and acceleration when hitting bounds
         if (position.X <= 0 || position.X >= Game1.ScreenBounds.Width - position.Width) {
             velocity.X = position.X <= 0 ? Math.Max(velocity.X, 0) : Math.Min(velocity.X, 0);
+
+            if (float.IsNaN(velocity.X))
+            {
+                Console.WriteLine();
+            }
+
             acceleration.X = position.X <= 0 ? Math.Max(acceleration.X, 0) : Math.Min(acceleration.X, 0);
         }
         if (position.Y <= 0 || position.Y >= Game1.ScreenBounds.Height - position.Height) {
@@ -110,6 +141,11 @@ public class Player : GameObject {
         
         if (currentReloadTime > 0) currentReloadTime -= 1.0f/60.0f;
         if (invulLength > 0) invulLength--;
+
+        if (float.IsNaN(velocity.X))
+        {
+            Console.WriteLine();
+        }
     }
 
     /// <summary>

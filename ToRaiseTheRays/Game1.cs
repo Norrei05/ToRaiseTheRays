@@ -346,6 +346,9 @@ public class Game1 : Game
                 if (kb.IsKeyDown(Keys.Enter))
                 {
                     gameState = GameState.Start;
+
+                    UpdateHighScores(score, "placeholderName");
+
                     player.Reset();
                     generator.Reset();
                     dayCounter = 1;
@@ -472,8 +475,6 @@ public class Game1 : Game
 
                 break;
             case GameState.End:
-
-                //UpdateHighScores(score, "placeholderName");
 
                 SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.White);
 
