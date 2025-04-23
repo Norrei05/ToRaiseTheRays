@@ -14,7 +14,9 @@ public enum GameState
     Day,
     Night,
     Pause,
-    End
+    End,
+    HighScoreSave,
+    HighScoreView
 }
 
 public class Game1 : Game
@@ -53,6 +55,7 @@ public class Game1 : Game
     public static GameState gameState;
     private GameState prevState;
     private KeyboardState prevKeyboard;
+    private List<Keys> validAlphabet;
 
     private Player player;
     private EnemyGenerator generator;
@@ -72,6 +75,7 @@ public class Game1 : Game
     private float opacity;
 
     public static int score;
+    private string name;
 
     public static List<GameObject> ActiveEntities { get; private set; }
 
@@ -105,6 +109,9 @@ public class Game1 : Game
         // Initialize empty 2D Rectangle array for the future map
         map = new Rectangle[ScreenBounds.Width / 16 + 1, (ScreenBounds.Height / 16) * 2];
 
+        validAlphabet = new List<Keys> { Keys.A, Keys.B, Keys.C, Keys.D, Keys.E, Keys.F, Keys.G, Keys.I, Keys.J, Keys.K, Keys.L,
+            Keys.M, Keys.N, Keys.O, Keys.P, Keys.Q, Keys.R, Keys.S, Keys.T, Keys.U, Keys.V, Keys.W, Keys.X, Keys.Y, Keys.Z };
+
         animationSpeedFPS = 10;
         secondsPerFrame = 1.0f / animationSpeedFPS;
         timeCounter = 0;
@@ -122,6 +129,7 @@ public class Game1 : Game
         opacity = 0;
 
         score = 0;
+        name = "";
 
         base.Initialize();
     }
@@ -198,7 +206,11 @@ public class Game1 : Game
         switch (gameState)
         {
             case GameState.Start:
-                if (kb.IsKeyDown(Keys.Space))
+                player.Reset();
+                generator.Reset();
+                dayCounter = 1;
+
+                if (kb.IsKeyDown(Keys.Space) && prevKeyboard.IsKeyUp(Keys.Space))
                 {
                     gameState = GameState.Day;
                     prevState = GameState.Start;
@@ -209,6 +221,13 @@ public class Game1 : Game
 
                     score = 0;
                 }
+                else if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
+                    gameState = GameState.HighScoreView;
+
+                    break;
+            case GameState.HighScoreView:
+                if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
+                    gameState = GameState.Start;
 
                 break;
             case GameState.Day:
@@ -343,13 +362,20 @@ public class Game1 : Game
                 }
                 break;
             case GameState.End:
-                if (kb.IsKeyDown(Keys.Enter))
-                {
+                if (kb.IsKeyDown(Keys.Space) && prevKeyboard.IsKeyUp(Keys.Space))
                     gameState = GameState.Start;
-                    player.Reset();
-                    generator.Reset();
-                    dayCounter = 1;
-                }
+                else if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
+                    gameState = GameState.HighScoreSave;
+
+                break;
+            case GameState.HighScoreSave:
+                if (GetAlphabeticalTextInput() != null && name.Length < 5)
+                    name += GetAlphabeticalTextInput();
+                else if (kb.IsKeyDown(Keys.Back) && prevKeyboard.IsKeyUp(Keys.Back) && name.Length > 0)
+                    name = name.Substring(0, name.Length - 1);
+
+                if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
+                    gameState = GameState.End;
 
                 break;
         }
@@ -379,33 +405,14 @@ public class Game1 : Game
                 // Display information about controls to player
                 SpriteBatch.DrawString(PapyrusFont, " TO RAISE\nTHE RAYS", new Vector2(ScreenBounds.Width / 2 - 98, 127), Color.Black);
                 SpriteBatch.DrawString(PapyrusFont, " TO RAISE\nTHE RAYS", new Vector2(ScreenBounds.Width / 2 - 100, 125), Color.OrangeRed);
-                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 273), Color.Black);
-                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 275), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 373), Color.Black);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 375), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, "    PRESS SHIFT TO\nVIEW  HIGH SCORES", new Vector2(ScreenBounds.Width / 2 - 203, ScreenBounds.Height - 233), Color.Black);
+                SpriteBatch.DrawString(PapyrusFont, "    PRESS SHIFT TO\nVIEW  HIGH SCORES", new Vector2(ScreenBounds.Width / 2 - 205, ScreenBounds.Height - 235), Color.OrangeRed);
 
                 break;
-            case GameState.Night:
-
-                DrawMap(SpriteBatch, gameTime, true, false, opacity);
-
-                // Change opacity for transition
-                if (opacity > 0)
-                    opacity -= 0.01f;
-                else
-                    opacity = 0f;
-
-                // Draws health bar to screen, updating based on the current player health
-                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
-
-                generator.Draw(healthBar, ScreenBounds, PapyrusFont);
-
-                if (player.Health > 0)
-                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
-
-                // Display current score to player
-                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(17, 17), Color.Yellow);
-                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(15, 15), Color.OrangeRed);
-
-                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
+            case GameState.HighScoreView:
+                SpriteBatch.Draw(startScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.LightGray);
 
                 break;
             case GameState.Day:
@@ -442,6 +449,31 @@ public class Game1 : Game
                         SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER\n    TO PAUSE", new Vector2(ScreenBounds.Width / 2 - 155, ScreenBounds.Height - 275), Color.OrangeRed);
                     }
                 }
+
+                break;
+            case GameState.Night:
+
+                DrawMap(SpriteBatch, gameTime, true, false, opacity);
+
+                // Change opacity for transition
+                if (opacity > 0)
+                    opacity -= 0.01f;
+                else
+                    opacity = 0f;
+
+                // Draws health bar to screen, updating based on the current player health
+                SpriteBatch.Draw(healthBar, new Rectangle(15, ScreenBounds.Height - 15 - (player.Health * 3), 50, player.Health * 3), Color.White);
+
+                generator.Draw(healthBar, ScreenBounds, PapyrusFont);
+
+                if (player.Health > 0)
+                    SpriteBatch.DrawString(PapyrusFont, "+", new Vector2(32, ScreenBounds.Height - 55), Color.OrangeRed);
+
+                // Display current score to player
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(17, 17), Color.Yellow);
+                SpriteBatch.DrawString(PapyrusFont, $"SCORE: {score}", new Vector2(15, 15), Color.OrangeRed);
+
+                foreach (GameObject entity in ActiveEntities) entity.Draw(Color.White);
 
                 break;
             case GameState.Pause:
@@ -482,10 +514,22 @@ public class Game1 : Game
 
                 SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 128, 127), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 130, 125), Color.OrangeRed);
-                SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 153, 327), Color.White);
-                SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 155, 325), Color.OrangeRed);
-                SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER TO\n     START OVER", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 273), Color.White);
-                SpriteBatch.DrawString(PapyrusFont, "PRESS ENTER TO\n     START OVER", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 275), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 145, 217), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 147, 215), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, " PRESS SPACE TO\nRETURN TO TITLE", new Vector2(ScreenBounds.Width / 2 - 198, ScreenBounds.Height - 373), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, " PRESS SPACE TO\nRETURN TO TITLE", new Vector2(ScreenBounds.Width / 2 - 200, ScreenBounds.Height - 375), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, "   PRESS SHIFT TO\nSAVE HIGH SCORE", new Vector2(ScreenBounds.Width / 2 - 198, ScreenBounds.Height - 233), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "   PRESS SHIFT TO\nSAVE HIGH SCORE", new Vector2(ScreenBounds.Width / 2 - 200, ScreenBounds.Height - 235), Color.OrangeRed);
+
+                break;
+            case GameState.HighScoreSave:
+                SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.LightGray);
+
+                SpriteBatch.DrawString(PapyrusFont, "PLEASE ENTER\n     YOUR NAME\n   (MAX 5 CHARS)", new Vector2(ScreenBounds.Width / 2 - 173, 127), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "PLEASE ENTER\n     YOUR NAME\n   (MAX 5 CHARS)", new Vector2(ScreenBounds.Width / 2 - 175, 125), Color.OrangeRed);
+
+                SpriteBatch.DrawString(PapyrusFont, name, new Vector2(ScreenBounds.Width / 2 - 63, ScreenBounds.Height - 373), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, name, new Vector2(ScreenBounds.Width / 2 - 65, ScreenBounds.Height - 375), Color.OrangeRed);
 
                 break;
         }
@@ -635,6 +679,11 @@ public class Game1 : Game
             timeCounter = 0;
     }
 
+    /// <summary>
+    /// Method to update the external high scores file with the new player name and high score.
+    /// </summary>
+    /// <param name="newScore">New high score to be added to the file</param>
+    /// <param name="playerName">Player name attached to new high score</param>
     private void UpdateHighScores(int newScore, string playerName)
     {
         List<string> scores = new List<string>();
@@ -653,6 +702,24 @@ public class Game1 : Game
 
         // Write updated scores back to the file
         File.WriteAllLines("highScores.txt", scores);
+    }
+
+    /// <summary>
+    /// Method to get alphabetical text input (and nothing outside of those keys).
+    /// </summary>
+    /// <returns>String version of the key being pressed, or null if nothing/an invalid key is pressed</returns>
+    private String GetAlphabeticalTextInput()
+    {
+        KeyboardState kb = Keyboard.GetState();
+
+        // Checks each key to see if it is one of the valid alphabet keys
+        foreach (Keys key in validAlphabet)
+        {
+            if (kb.IsKeyDown(key) && prevKeyboard.IsKeyUp(key))
+                return key.ToString();
+        }
+
+        return null!;
     }
 
 }
