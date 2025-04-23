@@ -233,8 +233,13 @@ public class Enemy : GameObject
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
             else if (other is Player && invulTime <= 0)
             {
-                TakeDamage(20);
-                invulTime = 1.2;
+                Player player = (Player)other;
+
+                if (position.Intersects(player.HitBox))
+                {
+                    TakeDamage(20);
+                    invulTime = 1.2;
+                }
             }
 
             if (Health <= 0)

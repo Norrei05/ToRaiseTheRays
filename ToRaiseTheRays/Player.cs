@@ -23,11 +23,15 @@ public class Player : GameObject {
     
     private float reloadTime;
     private float currentReloadTime;
+
+    private Rectangle hitBox;
     
     // private Texture2D fogTexture;
     // private Rectangle fogPosition;
     
     private Dictionary<string, Texture2D> directionSprites;
+
+    public Rectangle HitBox => hitBox;
 
     /// <summary>
     /// Custom Constructor
@@ -50,6 +54,8 @@ public class Player : GameObject {
         // this.fogPosition = new Rectangle(0, 0, Game1.ScreenBounds.Width, Game1.ScreenBounds.Height);
         
         directionSprites = sprites;
+
+        hitBox = new Rectangle(position.X + 30, position.Y, position.Width - 60, position.Height);
     }
 
     /// <summary>
@@ -110,6 +116,8 @@ public class Player : GameObject {
         
         if (currentReloadTime > 0) currentReloadTime -= 1.0f/60.0f;
         if (invulLength > 0) invulLength--;
+
+        UpdateHitBox();
     }
 
     /// <summary>
@@ -142,10 +150,19 @@ public class Player : GameObject {
     /// </summary>
     public override void CheckCollision(GameObject other) {
         if (other.Alignment == Alignment || invulLength > 0) return;
-        if (position.Intersects(other.position)) {
+        if (hitBox.Intersects(other.position)) {
             if (other is Bullet bullet) TakeDamage(bullet.Damage);
             else if (other is Enemy enemy && !enemy.Spawning) TakeDamage(enemy.CollisionDamage);
         }
+    }
+
+    /// <summary>
+    /// Realigns hitbox
+    /// </summary>
+    public void UpdateHitBox()
+    {
+        hitBox.X = position.X + 20;
+        hitBox.Y = position.Y;
     }
 
     /// <summary>
@@ -166,6 +183,8 @@ public class Player : GameObject {
 
         velocity = Vector2.Zero;
         acceleration = Vector2.Zero;
+
+        UpdateHitBox();
     }
 
     public override void Draw(Color overlay)
