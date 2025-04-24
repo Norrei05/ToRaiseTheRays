@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq; // My enemy is here at last. Justified by File I/O.
+using System.Linq;
+using System.Diagnostics; // My enemy is here at last. Justified by File I/O.
 
 namespace ToRaiseTheRays;
 
@@ -76,6 +77,7 @@ public class Game1 : Game
 
     public static int score;
     private string name;
+    private List<string> highScores;
 
     public static List<GameObject> ActiveEntities { get; private set; }
 
@@ -109,7 +111,7 @@ public class Game1 : Game
         // Initialize empty 2D Rectangle array for the future map
         map = new Rectangle[ScreenBounds.Width / 16 + 1, (ScreenBounds.Height / 16) * 2];
 
-        validAlphabet = new List<Keys> { Keys.A, Keys.B, Keys.C, Keys.D, Keys.E, Keys.F, Keys.G, Keys.I, Keys.J, Keys.K, Keys.L,
+        validAlphabet = new List<Keys> { Keys.A, Keys.B, Keys.C, Keys.D, Keys.E, Keys.F, Keys.G, Keys.H, Keys.I, Keys.J, Keys.K, Keys.L,
             Keys.M, Keys.N, Keys.O, Keys.P, Keys.Q, Keys.R, Keys.S, Keys.T, Keys.U, Keys.V, Keys.W, Keys.X, Keys.Y, Keys.Z };
 
         animationSpeedFPS = 10;
@@ -130,6 +132,7 @@ public class Game1 : Game
 
         score = 0;
         name = "";
+        highScores = new List<string>();
 
         base.Initialize();
     }
@@ -226,6 +229,8 @@ public class Game1 : Game
 
                     break;
             case GameState.HighScoreView:
+                highScores = GetHighScoresFromFile();
+
                 if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
                     gameState = GameState.Start;
 
@@ -354,12 +359,10 @@ public class Game1 : Game
 
                 break;
             case GameState.Pause:
-                
                 // Returns to original state it was paused in when the Enter key is pressed again
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
-                {
                     gameState = prevState;
-                }
+
                 break;
             case GameState.End:
                 if (kb.IsKeyDown(Keys.Space) && prevKeyboard.IsKeyUp(Keys.Space))
@@ -369,13 +372,29 @@ public class Game1 : Game
 
                 break;
             case GameState.HighScoreSave:
+                // Constructs a string version for their name based on alphabetical text input from user (not exceeding 5 characters long)
                 if (GetAlphabeticalTextInput() != null && name.Length < 5)
                     name += GetAlphabeticalTextInput();
                 else if (kb.IsKeyDown(Keys.Back) && prevKeyboard.IsKeyUp(Keys.Back) && name.Length > 0)
                     name = name.Substring(0, name.Length - 1);
 
+                // Returns to Game Over screen if either Shift is pressed again
                 if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
+                {
                     gameState = GameState.End;
+
+                    if (name.Length > 0)
+                        highScores = UpdateHighScores(score, name);
+                }
+
+                // Returns to Start screen if Enter is pressed
+                else if (kb.IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
+                {
+                    gameState = GameState.Start;
+
+                    if (name.Length > 0)
+                        highScores = UpdateHighScores(score, name);
+                }
 
                 break;
         }
@@ -405,14 +424,35 @@ public class Game1 : Game
                 // Display information about controls to player
                 SpriteBatch.DrawString(PapyrusFont, " TO RAISE\nTHE RAYS", new Vector2(ScreenBounds.Width / 2 - 98, 127), Color.Black);
                 SpriteBatch.DrawString(PapyrusFont, " TO RAISE\nTHE RAYS", new Vector2(ScreenBounds.Width / 2 - 100, 125), Color.OrangeRed);
-                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 373), Color.Black);
-                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n     BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 375), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n      BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 178, ScreenBounds.Height - 373), Color.Black);
+                SpriteBatch.DrawString(PapyrusFont, "PRESS SPACE TO\n      BEGIN GAME", new Vector2(ScreenBounds.Width / 2 - 180, ScreenBounds.Height - 375), Color.OrangeRed);
                 SpriteBatch.DrawString(PapyrusFont, "    PRESS SHIFT TO\nVIEW  HIGH SCORES", new Vector2(ScreenBounds.Width / 2 - 203, ScreenBounds.Height - 233), Color.Black);
                 SpriteBatch.DrawString(PapyrusFont, "    PRESS SHIFT TO\nVIEW  HIGH SCORES", new Vector2(ScreenBounds.Width / 2 - 205, ScreenBounds.Height - 235), Color.OrangeRed);
 
                 break;
             case GameState.HighScoreView:
                 SpriteBatch.Draw(startScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.LightGray);
+
+                SpriteBatch.DrawString(PapyrusFont, "HIGH SCORES", new Vector2(ScreenBounds.Width / 2 - 158, 127), Color.Black);
+                SpriteBatch.DrawString(PapyrusFont, "HIGH SCORES", new Vector2(ScreenBounds.Width / 2 - 160, 125), Color.OrangeRed);
+
+                // Always prints out 10 slots, with either file-generated information or blank slots to be taken up later
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i < highScores.Count)
+                    {
+                        string[] split = highScores[i].Split("|");
+                        String formattedScore = String.Format("{0:0000000}", Convert.ToInt16(split[1]));
+
+                        SpriteBatch.DrawString(PapyrusFont, (split[0] + "     " + formattedScore), new Vector2(ScreenBounds.Width / 2 - 163, 202 + (50 * i)), Color.Black);
+                        SpriteBatch.DrawString(PapyrusFont, (split[0] + "     " + formattedScore), new Vector2(ScreenBounds.Width / 2 - 165, 200 + (50 * i)), Color.OrangeRed);
+                    } 
+                    else
+                    {
+                        SpriteBatch.DrawString(PapyrusFont, ("________     0000000"), new Vector2(ScreenBounds.Width / 2 - 163, 202 + (50 * i)), Color.Black);
+                        SpriteBatch.DrawString(PapyrusFont, ("________     0000000"), new Vector2(ScreenBounds.Width / 2 - 165, 200 + (50 * i)), Color.OrangeRed);
+                    }
+                }
 
                 break;
             case GameState.Day:
@@ -504,20 +544,17 @@ public class Game1 : Game
 
                 break;
             case GameState.End:
-
-                //UpdateHighScores(score, "placeholderName");
-
                 SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.White);
 
-                // Display game over information to player, including their final score (formatted a certain way)
+                // Display game over information to player, including their final score (formatted a certain way) and how to progress to different states
                 String finalScore = String.Format("{0:0000000}", score);
 
                 SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 128, 127), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, "GAME OVER", new Vector2(ScreenBounds.Width / 2 - 130, 125), Color.OrangeRed);
                 SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 145, 217), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, $"FINAL SCORE:\n           {finalScore}", new Vector2(ScreenBounds.Width / 2 - 147, 215), Color.OrangeRed);
-                SpriteBatch.DrawString(PapyrusFont, " PRESS SPACE TO\nRETURN TO TITLE", new Vector2(ScreenBounds.Width / 2 - 198, ScreenBounds.Height - 373), Color.White);
-                SpriteBatch.DrawString(PapyrusFont, " PRESS SPACE TO\nRETURN TO TITLE", new Vector2(ScreenBounds.Width / 2 - 200, ScreenBounds.Height - 375), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, " PRESS SPACE TO\nRETURN TO TITLE", new Vector2(ScreenBounds.Width / 2 - 193, ScreenBounds.Height - 373), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, " PRESS SPACE TO\nRETURN TO TITLE", new Vector2(ScreenBounds.Width / 2 - 195, ScreenBounds.Height - 375), Color.OrangeRed);
                 SpriteBatch.DrawString(PapyrusFont, "   PRESS SHIFT TO\nSAVE HIGH SCORE", new Vector2(ScreenBounds.Width / 2 - 198, ScreenBounds.Height - 233), Color.White);
                 SpriteBatch.DrawString(PapyrusFont, "   PRESS SHIFT TO\nSAVE HIGH SCORE", new Vector2(ScreenBounds.Width / 2 - 200, ScreenBounds.Height - 235), Color.OrangeRed);
 
@@ -525,11 +562,15 @@ public class Game1 : Game
             case GameState.HighScoreSave:
                 SpriteBatch.Draw(endScreen, new Rectangle(0, 0, ScreenBounds.Width, ScreenBounds.Height), Color.LightGray);
 
-                SpriteBatch.DrawString(PapyrusFont, "PLEASE ENTER\n     YOUR NAME\n   (MAX 5 CHARS)", new Vector2(ScreenBounds.Width / 2 - 173, 127), Color.White);
-                SpriteBatch.DrawString(PapyrusFont, "PLEASE ENTER\n     YOUR NAME\n   (MAX 5 CHARS)", new Vector2(ScreenBounds.Width / 2 - 175, 125), Color.OrangeRed);
+                // Displays a prompt for user alphabetical text input, and displays the input to the screen
+                SpriteBatch.DrawString(PapyrusFont, "PLEASE ENTER\n     YOUR NAME\n   (MAX 5 CHARS)", new Vector2(ScreenBounds.Width / 2 - 168, 127), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "PLEASE ENTER\n     YOUR NAME\n   (MAX 5 CHARS)", new Vector2(ScreenBounds.Width / 2 - 170, 125), Color.OrangeRed);
 
-                SpriteBatch.DrawString(PapyrusFont, name, new Vector2(ScreenBounds.Width / 2 - 63, ScreenBounds.Height - 373), Color.White);
-                SpriteBatch.DrawString(PapyrusFont, name, new Vector2(ScreenBounds.Width / 2 - 65, ScreenBounds.Height - 375), Color.OrangeRed);
+                SpriteBatch.DrawString(PapyrusFont, name, new Vector2(ScreenBounds.Width / 2 - 98, ScreenBounds.Height - 373), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, name, new Vector2(ScreenBounds.Width / 2 - 100, ScreenBounds.Height - 375), Color.OrangeRed);
+
+                SpriteBatch.DrawString(PapyrusFont, "________", new Vector2(ScreenBounds.Width / 2 - 98, ScreenBounds.Height - 348), Color.White);
+                SpriteBatch.DrawString(PapyrusFont, "________", new Vector2(ScreenBounds.Width / 2 - 100, ScreenBounds.Height - 350), Color.OrangeRed);
 
                 break;
         }
@@ -684,24 +725,60 @@ public class Game1 : Game
     /// </summary>
     /// <param name="newScore">New high score to be added to the file</param>
     /// <param name="playerName">Player name attached to new high score</param>
-    private void UpdateHighScores(int newScore, string playerName)
+    /// <returns>List of high scores as strings from file, or just the current high score from this game if none are in the file</returns>
+    private List<string> UpdateHighScores(int newScore, string playerName)
     {
         List<string> scores = new List<string>();
 
-        // Read existing scores from the file
-        if (File.Exists("highScores.txt")) scores = File.ReadAllLines("highScores.txt").ToList();
+        try
+        {
+            // Read existing scores from the file
+            if (File.Exists("highScores.txt")) scores = File.ReadAllLines("highScores.txt").ToList();
 
-        // Add the new score
-        scores.Add($"{playerName}|{newScore}");
+            // Add the new score
+            scores.Add($"{playerName}|{newScore}");
 
-        // Sort scores in descending order
-        scores = scores.OrderByDescending(s => int.Parse(s.Split('|')[1])).ToList();
+            // Sort scores in descending order
+            scores = scores.OrderByDescending(s => int.Parse(s.Split('|')[1])).ToList();
 
-        // Keep only the top 10 scores
-        if (scores.Count > 10) scores = scores.Take(10).ToList();
+            // Keep only the top 10 scores
+            if (scores.Count > 10) scores = scores.Take(10).ToList();
 
-        // Write updated scores back to the file
-        File.WriteAllLines("highScores.txt", scores);
+            // Write updated scores back to the file
+            File.WriteAllLines("highScores.txt", scores);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine("Something went wrong when trying to read and write to the file 'highScores.txt'. Please double check the file and try again." + "\n" + e.Message);
+        }
+
+        return scores;
+    }
+
+    /// <summary>
+    /// Method to load in but not update the high scores from its designated file 'highScores.txt'.
+    /// </summary>
+    /// <returns>List of high scores from file, if any</returns>
+    private List<string> GetHighScoresFromFile()
+    {
+        List<string> scores = new List<string>();
+
+        try
+        {
+            // Read existing scores from the file
+            if (File.Exists("highScores.txt")) scores = File.ReadAllLines("highScores.txt").ToList();
+
+            // Sort scores in descending order
+            scores = scores.OrderByDescending(s => int.Parse(s.Split('|')[1])).ToList();
+
+            // Keep only the top 10 scores
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine("Something went wrong when trying to read the file 'highScores.txt'. Please double check the file and try again." + "\n" + e.Message);
+        }
+
+        return scores;
     }
 
     /// <summary>
