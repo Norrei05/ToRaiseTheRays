@@ -141,7 +141,13 @@ public class Enemy : GameObject
             position.X = (int)MathHelper.Lerp(lastPosition.X, (int)spawnTarget.X, t);
             position.Y = (int)MathHelper.Lerp(lastPosition.Y, (int)spawnTarget.Y, t);
 
-            if (timer >= spawnDuration) 
+            if (timer >= spawnDuration)
+            {
+                position.X = (int)spawnTarget.X;
+                position.Y = (int)spawnTarget.Y;
+            }
+
+            if (timer >= spawnDuration * 1.25) 
             {
                 Spawning = false;
                 timer = 0;
