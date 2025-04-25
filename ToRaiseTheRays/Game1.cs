@@ -209,9 +209,6 @@ public class Game1 : Game
         switch (gameState)
         {
             case GameState.Start:
-                player.Reset();
-                generator.Reset();
-                dayCounter = 1;
 
                 if (kb.IsKeyDown(Keys.Space) && prevKeyboard.IsKeyUp(Keys.Space))
                 {
@@ -379,17 +376,12 @@ public class Game1 : Game
                     name = name.Substring(0, name.Length - 1);
 
                 // Returns to Game Over screen if either Shift is pressed again
-                if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
+                if (kb.IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
                 {
-                    gameState = GameState.End;
+                    player.Reset();
+                    generator.Reset();
+                    dayCounter = 1;
 
-                    if (name.Length > 0)
-                        highScores = UpdateHighScores(score, name);
-                }
-
-                // Returns to Start screen if Enter is pressed
-                else if (kb.IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
-                {
                     gameState = GameState.Start;
 
                     if (name.Length > 0)
@@ -442,10 +434,16 @@ public class Game1 : Game
                     if (i < highScores.Count)
                     {
                         string[] split = highScores[i].Split("|");
+                        string formattedName = split[0];
+
+                        if (split[0].Length < 5)
+                            for (int space = 0; space < (5 - split[0].Length); space++)
+                                formattedName = formattedName + "    ";
+                                
                         String formattedScore = String.Format("{0:0000000}", Convert.ToInt16(split[1]));
 
-                        SpriteBatch.DrawString(PapyrusFont, (split[0] + "     " + formattedScore), new Vector2(ScreenBounds.Width / 2 - 163, 202 + (50 * i)), Color.Black);
-                        SpriteBatch.DrawString(PapyrusFont, (split[0] + "     " + formattedScore), new Vector2(ScreenBounds.Width / 2 - 165, 200 + (50 * i)), Color.OrangeRed);
+                        SpriteBatch.DrawString(PapyrusFont, (formattedName + "     " + formattedScore), new Vector2(ScreenBounds.Width / 2 - 163, 202 + (50 * i)), Color.Black);
+                        SpriteBatch.DrawString(PapyrusFont, (formattedName + "     " + formattedScore), new Vector2(ScreenBounds.Width / 2 - 165, 200 + (50 * i)), Color.OrangeRed);
                     } 
                     else
                     {
