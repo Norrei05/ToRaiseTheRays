@@ -91,6 +91,17 @@ public class Player : GameObject {
 
         // Update velocity
         velocity += acceleration;
+
+        if (velocity.X < 1E-10 && velocity.X > -1E-10)
+        {
+            velocity.X = 0;
+        }
+
+        if (velocity.Y < 1E-10 && velocity.Y > -1E-10)
+        {
+            velocity.Y = 0;
+        }
+
         if (velocity != Vector2.Zero) velocity -= Vector2.Normalize(velocity) * friction;
         if (velocity.Length() > velocityCap) velocity = Vector2.Normalize(velocity) * velocityCap;
 
