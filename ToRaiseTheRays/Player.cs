@@ -95,7 +95,22 @@ public class Player : GameObject {
 
         // Update velocity
         velocity += acceleration;
+
+        System.Diagnostics.Debug.WriteLine($"{velocity.X},{velocity.Y}");
+
         if (velocity != Vector2.Zero) velocity -= Vector2.Normalize(velocity) * friction;
+
+        /*
+        if (velocity.X < 1E-10 && velocity.X > -1E-10)
+        {
+            velocity.X = 0;
+        }
+
+        if (velocity.Y < 1E-10 && velocity.Y > -1E-10)
+        {
+            velocity.Y = 0;
+        }
+        */
 
 
         if (float.IsNaN(velocity.X))
