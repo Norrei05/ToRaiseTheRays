@@ -24,6 +24,7 @@ public class Enemy : GameObject
     private double timer;
 
     private double invulTime;
+    private double hurtTime;
 
     // Movement
 
@@ -68,6 +69,7 @@ public class Enemy : GameObject
         CollisionDamage = collisionDamage;
 
         invulTime = 0;
+        hurtTime = 0;
 
         Spawning = true;
         
@@ -224,6 +226,11 @@ public class Enemy : GameObject
         {
             invulTime -= gameTime.ElapsedGameTime.TotalSeconds;
         }
+
+        if (hurtTime > 0)
+        {
+            hurtTime -= gameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
     /// <summary>
@@ -236,7 +243,11 @@ public class Enemy : GameObject
     public override void CheckCollision(GameObject other) {
         if (other.Alignment == Alignment) return;
         if (position.Intersects(other.position) && !Spawning) {
-            if (other is Bullet bullet) TakeDamage(bullet.Damage);
+            if (other is Bullet bullet)
+            {
+                TakeDamage(bullet.Damage);
+                hurtTime = .2;
+            }
             else if (other is Player && invulTime <= 0)
             {
                 Player player = (Player)other;
@@ -245,6 +256,7 @@ public class Enemy : GameObject
                 {
                     TakeDamage(20);
                     invulTime = 1.2;
+                    hurtTime = .2;
                 }
             }
 
@@ -291,7 +303,7 @@ public class Enemy : GameObject
 
         try
         {
-            input = new StreamReader("..\\..\\..\\" + filename + ".pattern");
+            input = new StreamReader("" + filename + ".pattern");
 
             int numMoves = int.Parse(input.ReadLine());
 
@@ -326,7 +338,7 @@ public class Enemy : GameObject
 
         try
         {
-            input = new StreamReader("..\\..\\..\\" + filename + ".bullet");
+            input = new StreamReader("" + filename + ".bullet");
 
             int numSteps = int.Parse(input.ReadLine());
 
@@ -393,6 +405,24 @@ public class Enemy : GameObject
         if (Spawning)
         {
             Game1.SpriteBatch.Draw(texture, position, Color.Gray);
+        }
+        else if (hurtTime > 0)
+        {
+            int colorNumber = (int) (hurtTime*100) % 6;
+
+            switch (colorNumber)
+            {
+                case 0:
+                case 1:
+                case 2:
+                    Game1.SpriteBatch.Draw(texture, position, overlay);
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    Game1.SpriteBatch.Draw(texture, position, Color.LightSlateGray);
+                    break;
+            }
         }
         else
         {

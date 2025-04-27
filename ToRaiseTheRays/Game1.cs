@@ -376,7 +376,7 @@ public class Game1 : Game
                     name = name.Substring(0, name.Length - 1);
 
                 // Returns to Game Over screen if either Shift is pressed again
-                if (kb.IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
+                if ((kb.IsKeyDown(Keys.LeftShift) && prevKeyboard.IsKeyUp(Keys.LeftShift)) || (kb.IsKeyDown(Keys.RightShift) && prevKeyboard.IsKeyUp(Keys.RightShift)))
                 {
                     player.Reset();
                     generator.Reset();

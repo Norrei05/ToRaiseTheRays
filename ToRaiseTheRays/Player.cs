@@ -63,7 +63,7 @@ public class Player : GameObject {
     /// </summary>
     public void Shoot() {
         if (currentReloadTime <= 0 && Keyboard.GetState().IsKeyDown(Keys.Space)) {
-            base.Shoot(new Vector2(0, -1), 10, 10, 20);
+            base.Shoot(new Vector2(0, -1.25f), 10, 10, 20);
             currentReloadTime = reloadTime;
         }
     }
@@ -202,18 +202,20 @@ public class Player : GameObject {
     {
         if (invulLength > 0)
         {
-            int colorNumber = invulLength & 6;
+            int colorNumber = invulLength % 8;
 
             switch (colorNumber)
             {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     Game1.SpriteBatch.Draw(texture, position, overlay);
                     break;
-                case 3:
                 case 4:
                 case 5:
+                case 6:
+                case 7:
                     Game1.SpriteBatch.Draw(texture, position, Color.Red);
                     break;
             }
