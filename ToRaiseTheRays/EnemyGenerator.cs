@@ -227,7 +227,7 @@ namespace ToRaiseTheRays
 
             try
             {
-                input = new StreamReader("" + filename);
+                input = new StreamReader("..\\..\\..\\" + filename);
 
                 int numEnemies = int.Parse(input.ReadLine());
 

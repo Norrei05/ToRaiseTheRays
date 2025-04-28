@@ -303,7 +303,7 @@ public class Enemy : GameObject
 
         try
         {
-            input = new StreamReader("" + filename + ".pattern");
+            input = new StreamReader("..\\..\\..\\" + filename + ".pattern");
 
             int numMoves = int.Parse(input.ReadLine());
 
@@ -338,7 +338,7 @@ public class Enemy : GameObject
 
         try
         {
-            input = new StreamReader("" + filename + ".bullet");
+            input = new StreamReader("..\\..\\..\\" + filename + ".bullet");
 
             int numSteps = int.Parse(input.ReadLine());
 
